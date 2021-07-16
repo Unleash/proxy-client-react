@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "module": "es6",
+    "target": "es5",
+    "jsx": "react",
+    "baseUrl": ".",
+    "paths": {
+      "unleash-proxy-client": [
+        "node_modules/unleash-proxy-client/build/index.js"
+      ] // This mapping is relative to "baseUrl"
+    },
+    "allowJs": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "declarationDir": "dist",
+    "allowSyntheticDefaultImports": true
+  }
+}
