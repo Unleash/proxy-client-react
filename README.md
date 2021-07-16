@@ -12,7 +12,7 @@ Import the provider like this in index.js:
 
 ```
 const config = {
-  url: 'https://app.unleash-hosted.com/hosted/api/proxy',
+  url: 'https://HOSTNAME/api/proxy',
   clientKey: 'SECRET',
   refreshInterval: 15,
   appName: 'your-app-name',
