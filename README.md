@@ -11,6 +11,8 @@ This library is work in progress and not ready for use. In order to test it out 
 Import the provider like this in index.js:
 
 ```
+import FlagProvider from 'unleash-proxy-react';
+
 const config = {
   url: 'https://HOSTNAME/api/proxy',
   clientKey: 'SECRET',
@@ -40,7 +42,7 @@ const TestComponent = () => {
   if (enabled) {
     return <SomeComponent />
   }
-  retrun <AnotherComponent />
+  return <AnotherComponent />
 };
 
 export default TestComponent;

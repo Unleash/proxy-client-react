@@ -1,13 +1,13 @@
 {
   "name": "unleash-proxy-react",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "React interface for working with unleash",
   "main": "./dist/index.js",
   "types": "./dist/src/index.d.ts",
   "licence": "MIT",
   "repository": {
     "type": "git",
-    "url": "TODO"
+    "url": "https://github.com/Unleash/unleash-proxy-react"
   },
   "scripts": {
     "build": "webpack --mode=production",
