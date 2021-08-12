@@ -68,3 +68,22 @@ const TestComponent = () => {
 
 export default TestComponent;
 ```
+
+## Updating context
+
+Follow the following steps in order to update the unleash context:
+
+```
+import { useUnleashContext, useFlag } from '@unleash/unleash-proxy-react'
+
+const MyComponent = ({ userId }) => {
+  const variant = useFlag("my-toggle");
+  const updateContext = useUnleashContext();
+
+  useEffect(() => {
+    // context is updated with userId
+    updateContext({ userId })
+  }, [])
+}
+
+```
