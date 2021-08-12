@@ -1,21 +1,20 @@
-# WORK IN PROGRESS
+# DISCLAIMER:
 
-This library is work in progress and not ready for use. In order to test it out follow the following steps:
+This library is meant to be used with the [unleash-proxy](https://github.com/Unleash/unleash-proxy). The proxy application layer will sit between your unleash instance and your client applications, and provides performance and security benefits. DO NOT TRY to connect this library directly to the unleash instance, as the datasets follow different formats because the proxy only returns evaluated toggle information.
 
-1. Clone the repository
-2. Run yarn
-3. Run yarn build
-4. Run yarn link
-5. Create a new react project or use existing react project. Run yarn link 'unleash-proxy-react' in the project folder.
+# Installation
 
-Import the provider like this in index.js:
+`npm install @unleash/unleash-proxy-react`
+`yarn add @unleash/unleash-proxy-react`
+
+Import the provider like this in your entrypoint file (typically index.js/ts):
 
 ```
 import FlagProvider from 'unleash-proxy-react';
 
 const config = {
   url: 'https://HOSTNAME/api/proxy',
-  clientKey: 'SECRET',
+  clientKey: 'PROXYKEY',
   refreshInterval: 15,
   appName: 'your-app-name',
   environment: 'dev',

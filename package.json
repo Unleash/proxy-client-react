@@ -1,5 +1,5 @@
 {
-  "name": "unleash-proxy-react",
+  "name": "@unleash/unleash-proxy-react",
   "version": "0.0.1",
   "description": "React interface for working with unleash",
   "main": "./dist/index.js",
