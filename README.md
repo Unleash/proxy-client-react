@@ -13,7 +13,7 @@ yarn add @unleash/unleash-proxy-react
 Import the provider like this in your entrypoint file (typically index.js/ts):
 
 ```
-import FlagProvider from 'unleash-proxy-react';
+import FlagProvider from '@unleash/unleash-proxy-react';
 
 const config = {
   url: 'https://HOSTNAME/api/proxy',
@@ -36,7 +36,7 @@ ReactDOM.render(
 To check if a feature is enabled:
 
 ```
-import { useFlag } from 'unleash-proxy-react';
+import { useFlag } from '@unleash/unleash-proxy-react';
 
 const TestComponent = () => {
   const enabled = useFlag('travel.landing');
@@ -53,7 +53,7 @@ export default TestComponent;
 To check variants:
 
 ```
-import { useVariant } from 'unleash-proxy-react';
+import { useVariant } from '@unleash/unleash-proxy-react';
 
 const TestComponent = () => {
   const variant = useVariant('travel.landing');

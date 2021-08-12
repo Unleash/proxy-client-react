@@ -4,6 +4,10 @@
   "description": "React interface for working with unleash",
   "main": "./dist/index.js",
   "types": "./dist/src/index.d.ts",
+  "files": [
+    "dist",
+    "LICENCE.txt"
+  ],
   "licence": "MIT",
   "repository": {
     "type": "git",
