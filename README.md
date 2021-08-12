@@ -4,8 +4,11 @@ This library is meant to be used with the [unleash-proxy](https://github.com/Unl
 
 # Installation
 
-`npm install @unleash/unleash-proxy-react`
-`yarn add @unleash/unleash-proxy-react`
+```
+npm install @unleash/unleash-proxy-react
+// or
+yarn add @unleash/unleash-proxy-react
+```
 
 Import the provider like this in your entrypoint file (typically index.js/ts):
 
