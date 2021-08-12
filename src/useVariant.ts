@@ -9,8 +9,13 @@ const useVariant = (name: string) => {
   useEffect(() => {
     if (!client) return;
     client.on('update', () => {
-      const variant = getVariant(name);
-      setVariant(variant);
+      const newVariant = getVariant(name);
+      if (
+        variant.name !== newVariant.name ||
+        variant.enabled !== newVariant.enabled
+      ) {
+        setVariant(variant);
+      }
     });
 
     client.on('ready', () => {

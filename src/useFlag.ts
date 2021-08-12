@@ -9,7 +9,10 @@ const useFlag = (name: string) => {
     if (!client) return;
     client.on('update', () => {
       const enabled = isEnabled(name);
-      setFlag(enabled);
+
+      if (enabled !== flag) {
+        setFlag(enabled);
+      }
     });
 
     client.on('ready', () => {
