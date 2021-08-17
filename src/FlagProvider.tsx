@@ -23,8 +23,14 @@ interface IStorage {
 }
 
 const FlagProvider: React.FC<IFlagProvider> = ({ config, children }) => {
-  const client = new UnleashClient(config);
-  client.start();
+  const [client, setClient] = React.useState(null);
+
+  React.useEffect(() => {
+    const client = new UnleashClient(config);
+    client.start();
+
+    setClient(client);
+  }, []);
 
   const updateContext = (context: IContext) => {
     if (!client) return;
