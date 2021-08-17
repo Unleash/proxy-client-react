@@ -24,26 +24,47 @@ interface IStorage {
 
 const FlagProvider: React.FC<IFlagProvider> = ({ config, children }) => {
   const [client, setClient] = React.useState(null);
+  const functionCalls = React.useRef<any>();
+  functionCalls.current = [];
 
   React.useEffect(() => {
     const client = new UnleashClient(config);
     client.start();
 
+    functionCalls.current.forEach((call: any) => {
+      call(client);
+    }, []);
+
+    functionCalls.current = [];
+
     setClient(client);
   }, []);
 
   const updateContext = (context: IContext) => {
-    if (!client) return;
+    if (!client) {
+      deferCall((client: any) => client.updateContext(context));
+      return;
+    }
     client.updateContext(context);
   };
 
+  const deferCall = (callback: (client: any) => void) => {
+    functionCalls.current.push(callback);
+  };
+
   const isEnabled = (name: string) => {
-    if (!client) return;
+    if (!client) {
+      deferCall((client: any) => client.isEnabled(name));
+      return;
+    }
     return client.isEnabled(name);
   };
 
   const getVariant = (name: string) => {
-    if (!client) return;
+    if (!client) {
+      deferCall((client: any) => client.getVariant(name));
+      return;
+    }
     return client.getVariant(name);
   };
 
