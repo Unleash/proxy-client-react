@@ -18,6 +18,7 @@ const useVariant = (name: string) => {
         variantRef.current.enabled !== newVariant.enabled
       ) {
         setVariant(newVariant);
+        variantRef.current = newVariant;
       }
     });
 
@@ -27,7 +28,7 @@ const useVariant = (name: string) => {
     });
   }, [client]);
 
-  return variant;
+  return variant || {};
 };
 
 export default useVariant;
