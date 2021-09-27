@@ -12,7 +12,6 @@ const useVariant = (name: string) => {
     if (!client) return;
     client.on('update', () => {
       const newVariant = getVariant(name);
-
       if (
         variantRef.current.name !== newVariant.name ||
         variantRef.current.enabled !== newVariant.enabled
