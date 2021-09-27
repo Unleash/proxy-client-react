@@ -1,25 +1,9 @@
 import * as React from 'react';
 import FlagContext from './FlagContext';
-import { UnleashClient } from 'unleash-proxy-client';
+import { UnleashClient, IConfig, IContext } from 'unleash-proxy-client';
 
 interface IFlagProvider {
   config: IConfig;
-}
-
-interface IContext {
-  [index: string]: any;
-}
-
-interface IConfig {
-  url: string;
-  clientKey: string;
-  appName: string;
-  storage: IStorage;
-}
-
-interface IStorage {
-  save: (name: string, data: any) => void;
-  get: (name: string) => any;
 }
 
 const FlagProvider: React.FC<IFlagProvider> = ({ config, children }) => {
