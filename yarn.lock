@@ -870,10 +870,10 @@ typescript@^4.2.4:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.2.4.tgz#8610b59747de028fda898a8aef0e103f156d0961"
   integrity sha512-V+evlYHZnQkaz8TRBuxTA92yZBPotr5H+WhQ7bD3hZUndx5tGOa1fuCgeSjxAzM1RiN5IzvadIXTVefuuwZCRg==
 
-unleash-proxy-client@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/unleash-proxy-client/-/unleash-proxy-client-1.4.0.tgz#e7f9bf2c224322092458b04ad264d449b4cdf4d8"
-  integrity sha512-x+jJFg+A8f0HmFh0z5hVFt9eSXk1wVWiP+WG380AVgAys6VkfCC0KIzF1iweRJKH6JfPHWJjaYXocd8Ae6N75g==
+unleash-proxy-client@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/unleash-proxy-client/-/unleash-proxy-client-1.5.2.tgz#9b4dfa29ec5f4cebac4e2d30f832639b38db4cbb"
+  integrity sha512-S2RAIP2xvpl4EEw1KErfaYePe8Q55oNWh91Lb28h4/r3R97C0XC5q6NLfUZtpX5qYjrFEWJ/r932LquVt2FeWg==
   dependencies:
     "@react-native-async-storage/async-storage" "^1.15.5"
     tiny-emitter "^2.1.0"
