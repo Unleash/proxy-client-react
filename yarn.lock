@@ -865,18 +865,24 @@ ts-loader@^9.1.1:
     micromatch "^4.0.0"
     semver "^7.3.4"
 
+tslib@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
+  integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
+
 typescript@^4.2.4:
   version "4.2.4"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.2.4.tgz#8610b59747de028fda898a8aef0e103f156d0961"
   integrity sha512-V+evlYHZnQkaz8TRBuxTA92yZBPotr5H+WhQ7bD3hZUndx5tGOa1fuCgeSjxAzM1RiN5IzvadIXTVefuuwZCRg==
 
-unleash-proxy-client@^1.5.2:
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/unleash-proxy-client/-/unleash-proxy-client-1.5.2.tgz#9b4dfa29ec5f4cebac4e2d30f832639b38db4cbb"
-  integrity sha512-S2RAIP2xvpl4EEw1KErfaYePe8Q55oNWh91Lb28h4/r3R97C0XC5q6NLfUZtpX5qYjrFEWJ/r932LquVt2FeWg==
+unleash-proxy-client@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/unleash-proxy-client/-/unleash-proxy-client-1.6.0.tgz#ba82786981026ec5ec76c0576092c7320ba00d79"
+  integrity sha512-+DiNR9auUr0iGYavTYwaYnDvcKb2imhrCvzmpmnJ2nRhazD8/G5Q2ZcXi9icB2VJkMm8naTVtNHZmiIo+0HLng==
   dependencies:
     "@react-native-async-storage/async-storage" "^1.15.5"
     tiny-emitter "^2.1.0"
+    tslib "^2.3.1"
 
 uri-js@^4.2.2:
   version "4.4.1"
