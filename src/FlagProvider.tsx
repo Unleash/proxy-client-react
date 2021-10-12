@@ -47,7 +47,7 @@ const FlagProvider: React.FC<IFlagProvider> = ({ config, children }) => {
   const getVariant = (name: string) => {
     if (!client) {
       deferCall((client: any) => client.getVariant(name));
-      return;
+      return {};
     }
     return client.getVariant(name);
   };
