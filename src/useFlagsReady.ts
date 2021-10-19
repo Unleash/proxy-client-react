@@ -1,11 +1,20 @@
-import { useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import FlagContext from './FlagContext';
 
-const useUnleashContext = () => {
-  const { updateContext } = useContext(FlagContext);
+const useFlagsReady = () => {
+  const { client } = useContext(FlagContext);
+  const [flagsReady, setFlagsReady] = useState(false)
 
-  return updateContext;
+  useEffect(() => {
+    if (!client) return;
+
+    client.on('ready', () => {
+      setFlagsReady(true);
+    });
+  }, [client]);
+
+  return flagsReady;
 };
 
-export default useUnleashContext;
+export default useFlagsReady;
 
