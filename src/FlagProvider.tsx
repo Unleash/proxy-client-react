@@ -52,7 +52,15 @@ const FlagProvider: React.FC<IFlagProvider> = ({ config, children }) => {
     return client.getVariant(name);
   };
 
-  const context = { updateContext, isEnabled, getVariant, client };
+  const on = (event:string, ...props:string[]) => {
+    if (!client) {
+      deferCall((client: any) => client.on(event,...props));
+      return;
+    }
+    return client.on(event,...props)
+  };
+
+  const context = { on, updateContext, isEnabled, getVariant, client };
   return (
     <FlagContext.Provider value={context}>{children}</FlagContext.Provider>
   );
