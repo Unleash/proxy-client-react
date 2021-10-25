@@ -1,5 +1,7 @@
 import * as React from 'react';
 import FlagContext from './FlagContext';
+// @ts-ignore
+// ignore typings for the pure unleash-proxy-client library
 import { UnleashClient } from 'unleash-proxy-client';
 
 interface IFlagProvider {
