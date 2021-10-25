@@ -69,6 +69,24 @@ const TestComponent = () => {
 export default TestComponent;
 ```
 
+## Defer rendering until flags fetched
+
+Follow the following steps in order to delay rendering until the flags have been fetched.
+
+```jsx
+import { useFlagsReady } from '@unleash/proxy-client-react'
+
+const MyApp = () => {
+  const flagsReady = useFlagsReady();
+
+  if (!flagsReady) {
+    return <Loading />
+  }
+  return <MyComponent />
+}
+
+```
+
 ## Updating context
 
 Follow the following steps in order to update the unleash context:
