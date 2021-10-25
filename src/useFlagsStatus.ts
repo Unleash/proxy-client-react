@@ -16,10 +16,9 @@ const useFlagsStatus = () => {
     on(EVENTS.ERROR, (e:any) => {
       setFlagsError(e);
     });
-    
   },[]);
 
-  return {flagsReady, flagsError};
+  return { flagsReady, flagsError };
 };
 
 export default useFlagsStatus;
