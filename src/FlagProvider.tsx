@@ -13,7 +13,6 @@ const FlagProvider: React.FC<IFlagProvider> = ({ config, children }) => {
 
   React.useEffect(() => {
     const client = new UnleashClient(config);
-    client.start();
 
     functionCalls.current.forEach((call: any) => {
       call(client);
@@ -22,6 +21,8 @@ const FlagProvider: React.FC<IFlagProvider> = ({ config, children }) => {
     functionCalls.current = [];
 
     setClient(client);
+
+    client.start();
   }, []);
 
   const updateContext = (context: IContext) => {
