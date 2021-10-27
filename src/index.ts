@@ -1,10 +1,10 @@
 export type { IConfig } from 'unleash-proxy-client';
 import FlagProvider from './FlagProvider';
 import useFlag from './useFlag';
-import useFlagsReady from './useFlagsReady';
+import useFlagsStatus from './useFlagsStatus';
 import useVariant from './useVariant';
 import useUnleashContext from './useUnleashContext';
 
-export { FlagProvider, useFlag, useFlagsReady, useVariant, useUnleashContext };
+export { FlagProvider, useFlag, useFlagsStatus, useVariant, useUnleashContext };
 
 export default FlagProvider;

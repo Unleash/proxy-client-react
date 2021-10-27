@@ -71,18 +71,19 @@ export default TestComponent;
 
 ## Defer rendering until flags fetched
 
+useFlagsStatus retrieves the ready state and error events.
 Follow the following steps in order to delay rendering until the flags have been fetched.
 
 ```jsx
-import { useFlagsReady } from '@unleash/proxy-client-react'
+import { useFlagsStatus } from '@unleash/proxy-client-react'
 
 const MyApp = () => {
-  const flagsReady = useFlagsReady();
+  const { flagsReady, flagsError } = useFlagsStatus();
 
   if (!flagsReady) {
     return <Loading />
   }
-  return <MyComponent />
+  return <MyComponent error={flagsError}/>
 }
 
 ```
