@@ -15,6 +15,7 @@
     "esModuleInterop": true,
     "declaration": true,
     "declarationDir": "dist",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node"
   }
 }
