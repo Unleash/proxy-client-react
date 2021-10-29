@@ -1,3 +1,5 @@
+<!-- @format -->
+
 # DISCLAIMER:
 
 This library is meant to be used with the [unleash-proxy](https://github.com/Unleash/unleash-proxy). The proxy application layer will sit between your unleash instance and your client applications, and provides performance and security benefits. DO NOT TRY to connect this library directly to the unleash instance, as the datasets follow different formats because the proxy only returns evaluated toggle information.
@@ -33,7 +35,7 @@ ReactDOM.render(
 );
 ```
 
-To check if a feature is enabled:
+To check if a feature is enabled. Test:
 
 ```jsx
 import { useFlag } from '@unleash/proxy-client-react';
@@ -42,9 +44,9 @@ const TestComponent = () => {
   const enabled = useFlag('travel.landing');
 
   if (enabled) {
-    return <SomeComponent />
+    return <SomeComponent />;
   }
-  return <AnotherComponent />
+  return <AnotherComponent />;
 };
 
 export default TestComponent;
@@ -58,12 +60,12 @@ import { useVariant } from '@unleash/proxy-client-react';
 const TestComponent = () => {
   const variant = useVariant('travel.landing');
 
-  if (variant.enabled && variant.name === "SomeComponent") {
-    return <SomeComponent />
-  } else if (variant.enabled && variant.name === "AnotherComponent") {
-    return <AnotherComponent />
+  if (variant.enabled && variant.name === 'SomeComponent') {
+    return <SomeComponent />;
+  } else if (variant.enabled && variant.name === 'AnotherComponent') {
+    return <AnotherComponent />;
   }
-  return <DefaultComponent />
+  return <DefaultComponent />;
 };
 
 export default TestComponent;
@@ -75,17 +77,16 @@ useFlagsStatus retrieves the ready state and error events.
 Follow the following steps in order to delay rendering until the flags have been fetched.
 
 ```jsx
-import { useFlagsStatus } from '@unleash/proxy-client-react'
+import { useFlagsStatus } from '@unleash/proxy-client-react';
 
 const MyApp = () => {
   const { flagsReady, flagsError } = useFlagsStatus();
 
   if (!flagsReady) {
-    return <Loading />
+    return <Loading />;
   }
-  return <MyComponent error={flagsError}/>
-}
-
+  return <MyComponent error={flagsError} />;
+};
 ```
 
 ## Updating context
@@ -93,16 +94,15 @@ const MyApp = () => {
 Follow the following steps in order to update the unleash context:
 
 ```jsx
-import { useUnleashContext, useFlag } from '@unleash/proxy-client-react'
+import { useUnleashContext, useFlag } from '@unleash/proxy-client-react';
 
 const MyComponent = ({ userId }) => {
-  const variant = useFlag("my-toggle");
+  const variant = useFlag('my-toggle');
   const updateContext = useUnleashContext();
 
   useEffect(() => {
     // context is updated with userId
-    updateContext({ userId })
-  }, [])
-}
-
+    updateContext({ userId });
+  }, []);
+};
 ```
