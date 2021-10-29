@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.0
+- fix: proxy connection string
+- fix: action
+- fix: run placement
+- fix: run yarn
+- feat: github actions workflow
+- feat: unit tests
+- fix update lockfile
+- feat/use-flags-status move client start call last
 ## 0.1.2
 - fix: re export config types
 - feat: useFlagsReady
