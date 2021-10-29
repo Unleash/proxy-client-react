@@ -16,7 +16,7 @@ Import the provider like this in your entrypoint file (typically index.js/ts):
 import FlagProvider from '@unleash/proxy-client-react';
 
 const config = {
-  url: 'https://HOSTNAME/api/proxy',
+  url: 'https://HOSTNAME/proxy',
   clientKey: 'PROXYKEY',
   refreshInterval: 15,
   appName: 'your-app-name',
