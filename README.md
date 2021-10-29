@@ -35,7 +35,7 @@ ReactDOM.render(
 );
 ```
 
-To check if a feature is enabled. Test:
+To check if a feature is enabled. Use the following syntax:
 
 ```jsx
 import { useFlag } from '@unleash/proxy-client-react';
