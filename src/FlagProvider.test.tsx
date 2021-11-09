@@ -95,7 +95,7 @@ test('A consumer that subscribes AFTER client init shows values from provider an
   expect(isEnabledMock).toHaveBeenCalledWith(givenFlagName);
   expect(updateContextMock).toHaveBeenCalledWith(givenContext);
   expect(screen.getByText(/consuming value isEnabled/)).toHaveTextContent('consuming value isEnabled true')
-  expect(screen.getByText(/consuming value updateContext/)).toHaveTextContent('consuming value updateContext undefined')
+  expect(screen.getByText(/consuming value updateContext/)).toHaveTextContent('consuming value updateContext [object Promise]')
   expect(screen.getByText(/consuming value getVariant/)).toHaveTextContent('consuming value getVariant A')
   expect(screen.getByText(/consuming value on/)).toHaveTextContent('consuming value on subscribed')
 

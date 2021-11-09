@@ -25,12 +25,12 @@ const FlagProvider: React.FC<IFlagProvider> = ({ config, children }) => {
     client.start();
   }, []);
 
-  const updateContext = (context: IContext) => {
+  const updateContext = async (context: IContext): Promise<void> => {
     if (!client) {
-      deferCall((client: any) => client.updateContext(context));
+      deferCall(async (client: any) => await client.updateContext(context));
       return;
     }
-    client.updateContext(context);
+    await client.updateContext(context);
   };
 
   const deferCall = (callback: (client: any) => void) => {
