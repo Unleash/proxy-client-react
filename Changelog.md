@@ -1,5 +1,10 @@
 # Changelog
 
+
+## 1.0.1
+- Merge pull request #17 from GabrielNastase/feat/async-update-context
+- feat: async capabilites for updating context
+- chore: update changelog
 ## 1.0.0
 - fix: proxy connection string
 - fix: action
