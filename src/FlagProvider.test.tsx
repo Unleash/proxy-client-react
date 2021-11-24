@@ -13,7 +13,8 @@ interface IFlagProvider {
 }
 interface renderConsumerOptions {
   providerProps: IFlagProvider,
-  renderOptions: RenderOptions
+  renderOptions: RenderOptions,
+  client?: UnleashClientModule.UnleashClient
 }
 
 const getVariantMock = jest.fn().mockReturnValue('A');
@@ -29,8 +30,32 @@ const givenConfig = {
 }
 const givenFlagName = 'test';
 const givenContext = { session: 'context' };
+const givenToggles = [{
+  'name':'bootstrap-test',
+  'enabled': true,
+  'variant': {
+    'name': 'on',
+    'enabled': true
+  }
+}]
 
-UnleashClientSpy.mockReturnValue({ getVariant: getVariantMock, updateContext: updateContextMock , start:startClientMock , isEnabled: isEnabledMock, on: onMock });
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    json: () => Promise.resolve(),
+  })
+);
+
+const mockUnleashClient = () =>
+  UnleashClientSpy.mockReturnValue({
+    getVariant: getVariantMock,
+    updateContext: updateContextMock,
+    start: startClientMock,
+    isEnabled: isEnabledMock,
+    on: onMock
+  });
+
+const restoreUnleashClient = () => 
+  UnleashClientSpy.mockRestore();
 
 const FlagConsumerAfterClientInit = () => {
   const { updateContext, isEnabled, getVariant, client, on } = useContext(FlagContext);
@@ -77,14 +102,29 @@ const FlagConsumerBeforeClientInit = () => {
   return <></>
 }
 
-const renderConsumer = (ui: any, { providerProps, renderOptions} : renderConsumerOptions) => {
+const FlagConsumerWithBootstrappedToggles = () => {
+  const { isEnabled, getVariant } = useContext(FlagContext);
+  const enabled = isEnabled(givenToggles[0].name);
+  const variant = getVariant(givenToggles[0].name);
+  
+  return (
+    <>
+      <div>{`consuming value isEnabled ${enabled}`}</div>
+      <div>{`consuming value getVariant ${variant.name}`}</div>
+    </>
+  )
+}
+
+const renderConsumer = (ui: any, { providerProps, renderOptions, client } : renderConsumerOptions) => {
   return render(
-    <FlagProvider config={providerProps.config}>{ui}</FlagProvider>,
+    <FlagProvider config={providerProps.config} client={client}>{ui}</FlagProvider>,
     renderOptions,
   )
 }
 
 test('A consumer that subscribes AFTER client init shows values from provider and calls all the functions', () => {
+  mockUnleashClient();
+
   const providerProps = {
     config: givenConfig
   }
@@ -99,9 +139,12 @@ test('A consumer that subscribes AFTER client init shows values from provider an
   expect(screen.getByText(/consuming value getVariant/)).toHaveTextContent('consuming value getVariant A')
   expect(screen.getByText(/consuming value on/)).toHaveTextContent('consuming value on subscribed')
 
+  restoreUnleashClient();
 });
 
 test('A consumer that subscribes BEFORE client init shows values from provider and calls all the functions', () => {
+  mockUnleashClient();
+
   const providerProps = {
     config: givenConfig
   }
@@ -111,5 +154,54 @@ test('A consumer that subscribes BEFORE client init shows values from provider a
   expect(getVariantMock).toHaveBeenCalledWith(givenFlagName);
   expect(isEnabledMock).toHaveBeenCalledWith(givenFlagName);
   expect(updateContextMock).toHaveBeenCalledWith(givenContext);
-})
 
+  restoreUnleashClient();
+});
+
+test('A provider can be synchronously bootstraped with toggles', () => {
+  UnleashClientSpy.mockReturnValue({
+    start: startClientMock,
+  });
+    
+  const providerProps = {
+    config: {
+      ...givenConfig,
+      bootstrap: givenToggles
+    },
+    
+  }
+    
+  renderConsumer(<FlagConsumerWithBootstrappedToggles />, { providerProps, renderOptions: {} })
+  
+  expect(screen.getByText(/consuming value isEnabled/)).toHaveTextContent('consuming value isEnabled true')
+  expect(screen.getByText(/consuming value getVariant/)).toHaveTextContent('consuming value getVariant on')
+    
+  restoreUnleashClient();
+});
+
+test('A provider can use external Unleash client', () => {
+  UnleashClientSpy.mockReturnValue({
+    start: startClientMock,
+    fetchToggles: jest.fn(),
+  });
+
+  const unleashClientConfig = {
+    ...givenConfig,
+    storageProvider: new UnleashClientModule.InMemoryStorageProvider,
+    bootstrap: givenToggles
+  }
+
+  const customUnleashClient = new UnleashClientModule.UnleashClient(unleashClientConfig)
+    
+  const providerProps = {
+    config: unleashClientConfig,
+    client: customUnleashClient
+  }
+    
+  renderConsumer(<FlagConsumerWithBootstrappedToggles />, { providerProps, renderOptions: {} })
+  
+  expect(screen.getByText(/consuming value isEnabled/)).toHaveTextContent('consuming value isEnabled true')
+  expect(screen.getByText(/consuming value getVariant/)).toHaveTextContent('consuming value getVariant on')
+    
+  restoreUnleashClient();
+})

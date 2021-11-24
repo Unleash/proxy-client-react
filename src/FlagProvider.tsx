@@ -1,70 +1,47 @@
-import * as React from 'react';
-import FlagContext from './FlagContext';
+import React, { useEffect, useRef } from 'react';
 import { UnleashClient, IConfig, IContext } from 'unleash-proxy-client';
+import FlagContext from './FlagContext';
 
 interface IFlagProvider {
   config: IConfig;
+  client?: UnleashClient;
 }
 
-const FlagProvider: React.FC<IFlagProvider> = ({ config, children }) => {
-  const [client, setClient] = React.useState(null);
-  const functionCalls = React.useRef<any>();
-  functionCalls.current = [];
+const FlagProvider: React.FC<IFlagProvider> = (props) => {
+  const client = useRef<UnleashClient>(props.client);
 
-  React.useEffect(() => {
-    const client = new UnleashClient(config);
+  if (!client.current) {
+    client.current = new UnleashClient(props.config);
 
-    functionCalls.current.forEach((call: any) => {
-      call(client);
-    }, []);
+    if (Array.isArray(props.config.bootstrap)) {
+      // @ts-ignore: Toogles should be set synchronously for proper SSR support
+      client.current.toggles = props.config.bootstrap;
+    }
+  }
 
-    functionCalls.current = [];
-
-    setClient(client);
-
-    client.start();
+  useEffect(() => {
+    client.current.start();
   }, []);
 
   const updateContext = async (context: IContext): Promise<void> => {
-    if (!client) {
-      deferCall(async (client: any) => await client.updateContext(context));
-      return;
-    }
-    await client.updateContext(context);
-  };
-
-  const deferCall = (callback: (client: any) => void) => {
-    functionCalls.current.push(callback);
+    await client.current.updateContext(context);
   };
 
   const isEnabled = (name: string) => {
-    if (!client) {
-      deferCall((client: any) => client.isEnabled(name));
-      return;
-    }
-    return client.isEnabled(name);
+    return client.current.isEnabled(name);
   };
 
   const getVariant = (name: string) => {
-    if (!client) {
-      deferCall((client: any) => client.getVariant(name));
-      return {};
-    }
-    return client.getVariant(name);
+    return client.current.getVariant(name);
   };
 
-  const on = (event:string, ...args:any[]) => {
-    if (!client) {
-      deferCall((client: any) => client.on(event,...args));
-      return;
-    }
-    return client.on(event, ...args);
+  const on = (event: string, ...args: any[]) => {
+    return client.current.on(event, ...args);
   };
 
-  const context = { on, updateContext, isEnabled, getVariant, client };
-  return (
-    <FlagContext.Provider value={context}>{children}</FlagContext.Provider>
-  );
+  const context = { on, updateContext, isEnabled, getVariant, client: client.current };
+
+  return <FlagContext.Provider value={context}>{props.children}</FlagContext.Provider>;
 };
 
 export default FlagProvider;
