@@ -1,18 +1,30 @@
+/** @format */
+
 import * as React from 'react';
 import FlagContext from './FlagContext';
 import { UnleashClient, IConfig, IContext } from 'unleash-proxy-client';
 
 interface IFlagProvider {
-  config: IConfig;
+  config?: IConfig;
+  unleashClient?: UnleashClient;
 }
 
-const FlagProvider: React.FC<IFlagProvider> = ({ config, children }) => {
+const FlagProvider: React.FC<IFlagProvider> = ({
+  config,
+  children,
+  unleashClient,
+}) => {
   const [client, setClient] = React.useState(null);
   const functionCalls = React.useRef<any>();
   functionCalls.current = [];
 
   React.useEffect(() => {
-    const client = new UnleashClient(config);
+    let client: UnleashClient | null = null;
+    if (unleashClient) {
+      client = unleashClient;
+    } else {
+      client = new UnleashClient(config);
+    }
 
     functionCalls.current.forEach((call: any) => {
       call(client);
@@ -27,7 +39,9 @@ const FlagProvider: React.FC<IFlagProvider> = ({ config, children }) => {
 
   const updateContext = async (context: IContext): Promise<void> => {
     if (!client) {
-      deferCall(async (client: any) => await client.updateContext(context));
+      deferCall(
+        async (client: any) => await client.updateContext(context)
+      );
       return;
     }
     await client.updateContext(context);
@@ -53,9 +67,9 @@ const FlagProvider: React.FC<IFlagProvider> = ({ config, children }) => {
     return client.getVariant(name);
   };
 
-  const on = (event:string, ...args:any[]) => {
+  const on = (event: string, ...args: any[]) => {
     if (!client) {
-      deferCall((client: any) => client.on(event,...args));
+      deferCall((client: any) => client.on(event, ...args));
       return;
     }
     return client.on(event, ...args);
