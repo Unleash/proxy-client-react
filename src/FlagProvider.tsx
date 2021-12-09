@@ -18,6 +18,12 @@ const FlagProvider: React.FC<IFlagProvider> = ({
 }) => {
   const client = React.useRef<UnleashClient>(unleashClient);
 
+  if (!config && !unleashClient) {
+    throw new Error(
+      'You must provide either a config or an unleash client to the flag provider'
+    );
+  }
+
   if (!client.current) {
     client.current = new UnleashClient(config);
   }
