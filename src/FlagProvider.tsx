@@ -19,8 +19,9 @@ const FlagProvider: React.FC<IFlagProvider> = ({
   const client = React.useRef<UnleashClient>(unleashClient);
 
   if (!config && !unleashClient) {
-    throw new Error(
-      'You must provide either a config or an unleash client to the flag provider'
+    console.warn(
+      `You must provide either a config or an unleash client to the flag provider. If you are initializing the client in useEffect, you can avoid this warning by
+      checking if the client exists before rendering.`
     );
   }
 
