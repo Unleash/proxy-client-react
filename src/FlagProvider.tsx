@@ -1,67 +1,62 @@
+/** @format */
+
 import * as React from 'react';
 import FlagContext from './FlagContext';
 import { UnleashClient, IConfig, IContext } from 'unleash-proxy-client';
 
+type eventArgs = [Function, any];
+
 interface IFlagProvider {
-  config: IConfig;
+  config?: IConfig;
+  unleashClient?: UnleashClient;
 }
 
-const FlagProvider: React.FC<IFlagProvider> = ({ config, children }) => {
-  const [client, setClient] = React.useState(null);
-  const functionCalls = React.useRef<any>();
-  functionCalls.current = [];
+const FlagProvider: React.FC<IFlagProvider> = ({
+  config,
+  children,
+  unleashClient,
+}) => {
+  const client = React.useRef<UnleashClient>(unleashClient);
+
+  if (!config && !unleashClient) {
+    console.warn(
+      `You must provide either a config or an unleash client to the flag provider. If you are initializing the client in useEffect, you can avoid this warning by
+      checking if the client exists before rendering.`
+    );
+  }
+
+  if (!client.current) {
+    client.current = new UnleashClient(config);
+  }
 
   React.useEffect(() => {
-    const client = new UnleashClient(config);
-
-    functionCalls.current.forEach((call: any) => {
-      call(client);
-    }, []);
-
-    functionCalls.current = [];
-
-    setClient(client);
-
-    client.start();
+    client.current.start();
   }, []);
 
   const updateContext = async (context: IContext): Promise<void> => {
-    if (!client) {
-      deferCall(async (client: any) => await client.updateContext(context));
-      return;
-    }
-    await client.updateContext(context);
-  };
-
-  const deferCall = (callback: (client: any) => void) => {
-    functionCalls.current.push(callback);
+    await client.current.updateContext(context);
   };
 
   const isEnabled = (name: string) => {
-    if (!client) {
-      deferCall((client: any) => client.isEnabled(name));
-      return;
-    }
-    return client.isEnabled(name);
+    return client.current.isEnabled(name);
   };
 
   const getVariant = (name: string) => {
-    if (!client) {
-      deferCall((client: any) => client.getVariant(name));
-      return {};
-    }
-    return client.getVariant(name);
+    return client.current.getVariant(name);
   };
 
-  const on = (event:string, ...args:any[]) => {
-    if (!client) {
-      deferCall((client: any) => client.on(event,...args));
-      return;
-    }
-    return client.on(event, ...args);
+  const on = (event: string, ...args: eventArgs) => {
+    return client.current.on(event, ...args);
   };
 
-  const context = { on, updateContext, isEnabled, getVariant, client };
+  const context = {
+    on,
+    updateContext,
+    isEnabled,
+    getVariant,
+    client: client.current,
+  };
+
   return (
     <FlagContext.Provider value={context}>{children}</FlagContext.Provider>
   );
