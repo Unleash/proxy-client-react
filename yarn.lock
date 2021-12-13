@@ -4029,10 +4029,10 @@ universalify@^0.1.2:
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
   integrity sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==
 
-unleash-proxy-client@1.9.0-alpha.0:
-  version "1.9.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/unleash-proxy-client/-/unleash-proxy-client-1.9.0-alpha.0.tgz#460d3c9541344d7541ed8b172f5c2fc00c3d6501"
-  integrity sha512-/9S1xYqj7BazKOB8C+r9ExX8fHycCP6dLQXosg7Iqt/WTrTHy5CvFqxRFcUwNx099BoOFNlfH49l0n/6bDehng==
+unleash-proxy-client@1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/unleash-proxy-client/-/unleash-proxy-client-1.9.0.tgz#e1d3bf0b78593e3ce523606f7759e43a59e44518"
+  integrity sha512-hOpqBp+31InfUvzUoXJc+dbHqepe4QmI3iSfpLER32tzK80iMTH6g9vg2QbBH1IobVwJrcRgLItjwtm/w0uWjQ==
   dependencies:
     "@react-native-async-storage/async-storage" "^1.15.5"
     tiny-emitter "^2.1.0"
