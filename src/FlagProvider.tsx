@@ -49,13 +49,16 @@ const FlagProvider: React.FC<IFlagProvider> = ({
     return client.current.on(event, ...args);
   };
 
-  const context = {
-    on,
-    updateContext,
-    isEnabled,
-    getVariant,
-    client: client.current,
-  };
+  const context = React.useMemo(
+    () => ({
+      on,
+      updateContext,
+      isEnabled,
+      getVariant,
+      client: client.current,
+    }),
+    []
+  );
 
   return (
     <FlagContext.Provider value={context}>{children}</FlagContext.Provider>
