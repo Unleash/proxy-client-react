@@ -33,6 +33,31 @@ ReactDOM.render(
 );
 ```
 
+Alternatively, you can pass your own client in to the FlagProvider:
+
+```jsx
+import FlagProvider, { UnleashClient } from '@unleash/proxy-client-react';
+
+const config = {
+  url: 'https://HOSTNAME/proxy',
+  clientKey: 'PROXYKEY',
+  refreshInterval: 15,
+  appName: 'your-app-name',
+  environment: 'dev',
+};
+
+const client = new UnleashClient(config);
+
+ReactDOM.render(
+  <React.StrictMode>
+    <FlagProvider unleashClient={client}>
+      <App />
+    </FlagProvider>
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+```
+
 To check if a feature is enabled:
 
 ```jsx
