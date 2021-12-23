@@ -181,3 +181,34 @@ test('A consumer should be able to get a variant when the client is passed into 
     'consuming value on subscribed'
   );
 });
+
+test('A memoized consumer should not rerender when the context provider values are the same', () => {
+  const renderCounter = jest.fn();
+
+  const MemoizedConsumer = React.memo(() => {
+    const { updateContext, isEnabled, getVariant, client, on } =
+      useContext(FlagContext);
+
+    renderCounter();
+
+    return <></>;
+  });
+
+  expect(renderCounter).toHaveBeenCalledTimes(0);
+
+  const { rerender } = render(
+    <FlagProvider config={givenConfig}>
+      <MemoizedConsumer />
+    </FlagProvider>
+  );
+
+  expect(renderCounter).toHaveBeenCalledTimes(1);
+
+  rerender(
+    <FlagProvider config={givenConfig}>
+      <MemoizedConsumer />
+    </FlagProvider>
+  );
+
+  expect(renderCounter).toHaveBeenCalledTimes(1);
+});
