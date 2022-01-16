@@ -129,7 +129,7 @@ const MyComponent = ({ userId }) => {
     updateContext({ userId })
   }, [userId])
 
-  useEffect(async () => {
+  useEffect(() => {
     async function run() {
     // Can wait for the new flags to pull in from the different context
       updateContext({ userId });
