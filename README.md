@@ -138,3 +138,17 @@ const MyComponent = ({ userId }) => {
 }
 
 ```
+
+## React Native
+
+Because React Native doesn't run in a web browser, it doesn't have access to the `localStorage` API. Instead, you need to tell Unleash to use your specific storage provider. The most common storage provider for React Native is [AsyncStorage](https://github.com/react-native-async-storage/async-storage).
+To configure it, add the following property to your configuration object:
+
+```js
+const config = {
+  storageProvider: {
+    save: (name, data) => AsyncStorage.setItem(name, JSON.stringify(data)),
+    get: (name) => AsyncStorage.getItem(name),
+  },
+};
+```
