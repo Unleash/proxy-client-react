@@ -127,14 +127,16 @@ const MyComponent = ({ userId }) => {
   useEffect(() => {
     // context is updated with userId
     updateContext({ userId })
-  }, [])
+  }, [userId])
 
-  useEffect(async () => {
+  useEffect(() => {
+    async function run() {
     // Can wait for the new flags to pull in from the different context
-    await updateContext({ userId });
-
-    console.log('new flags loaded for', userId);
-  }, []);
+      await updateContext({ userId });
+      console.log('new flags loaded for', userId);
+    }
+    run();
+  }, [userId]);
 }
 
 ```
