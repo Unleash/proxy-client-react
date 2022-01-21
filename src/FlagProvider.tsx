@@ -31,6 +31,14 @@ const FlagProvider: React.FC<IFlagProvider> = ({
     client.current = new UnleashClient(config);
   }
 
+  client.current.on('ready', () => {
+    setFlagsReady(true);
+  });
+
+  client.current.on('error', (e: any) => {
+    setFlagsError(e);
+  });
+
   React.useEffect(() => {
     client.current.start();
   }, []);
