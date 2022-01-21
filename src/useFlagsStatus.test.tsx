@@ -16,7 +16,7 @@ const mockValue = {
   setFlagsReady: setFlagsReadyMock,
   setFlagsError: setFlagsErrorMock,
   flagsReady: false,
-  flagsError: null,
+  flagsError: null as null,
 };
 
 beforeEach(() => {
