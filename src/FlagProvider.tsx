@@ -17,6 +17,8 @@ const FlagProvider: React.FC<IFlagProvider> = ({
   unleashClient,
 }) => {
   const client = React.useRef<UnleashClient>(unleashClient);
+  const [flagsReady, setFlagsReady] = React.useState(false);
+  const [flagsError, setFlagsError] = React.useState(null);
 
   if (!config && !unleashClient) {
     console.warn(
@@ -56,8 +58,12 @@ const FlagProvider: React.FC<IFlagProvider> = ({
       isEnabled,
       getVariant,
       client: client.current,
+      flagsReady,
+      flagsError,
+      setFlagsReady,
+      setFlagsError,
     }),
-    []
+    [flagsReady, flagsError]
   );
 
   return (
