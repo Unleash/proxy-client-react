@@ -1,25 +1,25 @@
+/** @format */
+
 import { useState, useEffect, useContext } from 'react';
 import { EVENTS } from 'unleash-proxy-client';
 
 import FlagContext from './FlagContext';
 
 const useFlagsStatus = () => {
-  const { on } = useContext(FlagContext);
-  const [flagsReady, setFlagsReady] = useState(false);
-  const [flagsError, setFlagsError] = useState(null);
+  const { on, flagsReady, setFlagsReady, flagsError, setFlagsError } =
+    useContext(FlagContext);
 
-  useEffect(() => {    
+  useEffect(() => {
     on(EVENTS.READY, () => {
-      setFlagsReady(true); 
+      setFlagsReady(true);
     });
-    
-    on(EVENTS.ERROR, (e:any) => {
+
+    on(EVENTS.ERROR, (e: any) => {
       setFlagsError(e);
     });
-  },[]);
+  }, []);
 
   return { flagsReady, flagsError };
 };
 
 export default useFlagsStatus;
-
