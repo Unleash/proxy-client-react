@@ -150,7 +150,10 @@ To configure it, add the following property to your configuration object:
 const config = {
   storageProvider: {
     save: (name, data) => AsyncStorage.setItem(name, JSON.stringify(data)),
-    get: (name) => AsyncStorage.getItem(name),
+    get: async (name) => {
+      const data = await AsyncStorage.getItem(name);
+      return data ? JSON.parse(data) : undefined;
+    }
   },
 };
 ```
