@@ -10,6 +10,7 @@ import FlagProvider from './FlagProvider';
 import FlagContext from './FlagContext';
 
 import '@testing-library/jest-dom';
+import { EVENTS } from 'unleash-proxy-client';
 interface IFlagProvider {
   config: UnleashClientModule.IConfig;
 }
@@ -27,6 +28,7 @@ const UnleashClientSpy: jest.SpyInstance = jest.spyOn(
   UnleashClientModule,
   'UnleashClient'
 );
+
 const givenConfig = {
   appName: 'my-app',
   clientKey: 'my-secret',
@@ -34,6 +36,10 @@ const givenConfig = {
 };
 const givenFlagName = 'test';
 const givenContext = { session: 'context' };
+
+beforeEach(() => {
+  onMock.mockClear();
+});
 
 UnleashClientSpy.mockReturnValue({
   getVariant: getVariantMock,
@@ -211,4 +217,76 @@ test('A memoized consumer should not rerender when the context provider values a
   );
 
   expect(renderCounter).toHaveBeenCalledTimes(1);
+});
+
+test('should update when ready event is sent', () => {
+  const localMock = jest.fn();
+  UnleashClientSpy.mockReturnValue({
+    getVariant: getVariantMock,
+    updateContext: updateContextMock,
+    start: startClientMock,
+    isEnabled: isEnabledMock,
+    on: localMock,
+  });
+
+  const providerProps = {
+    config: givenConfig,
+  };
+
+  const client = new UnleashClientModule.UnleashClient(
+    providerProps.config
+  );
+
+  render(
+    <FlagProvider unleashClient={client}>
+      <div>Hi</div>
+    </FlagProvider>
+  );
+
+  localMock.mockImplementation((event, cb) => {
+    if (event === EVENTS.READY) {
+      cb();
+    }
+  });
+
+  expect(localMock).toHaveBeenCalledWith(
+    EVENTS.READY,
+    expect.any(Function)
+  );
+});
+
+test('should register error when error event is sent', () => {
+  const localMock = jest.fn();
+  UnleashClientSpy.mockReturnValue({
+    getVariant: getVariantMock,
+    updateContext: updateContextMock,
+    start: startClientMock,
+    isEnabled: isEnabledMock,
+    on: localMock,
+  });
+
+  const providerProps = {
+    config: givenConfig,
+  };
+
+  const client = new UnleashClientModule.UnleashClient(
+    providerProps.config
+  );
+
+  render(
+    <FlagProvider unleashClient={client}>
+      <div>Hi</div>
+    </FlagProvider>
+  );
+
+  localMock.mockImplementation((event, cb) => {
+    if (event === EVENTS.ERROR) {
+      cb('Error');
+    }
+  });
+
+  expect(localMock).toHaveBeenCalledWith(
+    EVENTS.ERROR,
+    expect.any(Function)
+  );
 });
