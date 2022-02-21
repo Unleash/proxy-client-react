@@ -41,6 +41,11 @@ const FlagProvider: React.FC<IFlagProvider> = ({
 
   React.useEffect(() => {
     client.current.start();
+
+    return () => {
+      client.current.off('ready');
+      client.current.off('error');
+    };
   }, []);
 
   const updateContext = async (context: IContext): Promise<void> => {

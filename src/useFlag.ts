@@ -1,3 +1,5 @@
+/** @format */
+
 import { useContext, useEffect, useState, useRef } from 'react';
 import FlagContext from './FlagContext';
 
@@ -21,6 +23,11 @@ const useFlag = (name: string) => {
       const enabled = isEnabled(name);
       setFlag(enabled);
     });
+
+    return () => {
+      client.off('update');
+      client.off('ready');
+    };
   }, [client]);
 
   return flag;

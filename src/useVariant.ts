@@ -1,3 +1,5 @@
+/** @format */
+
 import { useContext, useState, useEffect, useRef } from 'react';
 import FlagContext from './FlagContext';
 
@@ -25,6 +27,11 @@ const useVariant = (name: string) => {
       const variant = getVariant(name);
       setVariant(variant);
     });
+
+    return () => {
+      client.off('update');
+      client.off('ready');
+    };
   }, [client]);
 
   return variant || {};
