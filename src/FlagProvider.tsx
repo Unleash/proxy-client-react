@@ -9,12 +9,14 @@ type eventArgs = [Function, any];
 interface IFlagProvider {
   config?: IConfig;
   unleashClient?: UnleashClient;
+  startClient?: boolean;
 }
 
 const FlagProvider: React.FC<IFlagProvider> = ({
   config,
   children,
   unleashClient,
+  startClient = true,
 }) => {
   const client = React.useRef<UnleashClient>(unleashClient);
   const [flagsReady, setFlagsReady] = React.useState(false);
@@ -40,7 +42,10 @@ const FlagProvider: React.FC<IFlagProvider> = ({
   });
 
   React.useEffect(() => {
-    client.current.start();
+    const shouldStartClient = startClient || !unleashClient;
+    if (shouldStartClient) {
+      client.current.start();
+    }
   }, []);
 
   const updateContext = async (context: IContext): Promise<void> => {

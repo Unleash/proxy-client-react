@@ -290,3 +290,28 @@ test('should register error when error event is sent', () => {
     expect.any(Function)
   );
 });
+
+test('should not start client if startClient is false', () => {
+  const localMock = jest.fn();
+  UnleashClientSpy.mockReturnValue({
+    getVariant: getVariantMock,
+    updateContext: updateContextMock,
+    start: localMock,
+    isEnabled: isEnabledMock,
+    on: onMock,
+  });
+
+  const providerProps = {
+    config: givenConfig,
+  };
+
+  const client = new UnleashClientModule.UnleashClient(providerProps.config);
+
+  render(
+    <FlagProvider unleashClient={client} startClient={false}>
+      <div>Hi</div>
+    </FlagProvider>
+  );
+
+  expect(localMock).not.toHaveBeenCalled();
+});
