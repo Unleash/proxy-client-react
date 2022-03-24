@@ -58,6 +58,19 @@ ReactDOM.render(
 );
 ```
 
+Defer starting of the client: 
+
+```jsx
+ReactDOM.render(
+  <React.StrictMode>
+    <FlagProvider unleashClient={client} startClient={false}>
+      <App />
+    </FlagProvider>
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+```
+
 To check if a feature is enabled:
 
 ```jsx
