@@ -58,7 +58,7 @@ ReactDOM.render(
 );
 ```
 
-Defer starting of the client: 
+Defer starting the polling of the client (this allows you more fine grained control over when the client should fetch the feature flag configuration, for instance if you need context values that you are fetching from the server): 
 
 ```jsx
 ReactDOM.render(
