@@ -10,6 +10,8 @@ npm install @unleash/proxy-client-react
 yarn add @unleash/proxy-client-react
 ```
 
+# Initialization
+
 Import the provider like this in your entrypoint file (typically index.js/ts):
 
 ```jsx
@@ -58,6 +60,52 @@ ReactDOM.render(
 );
 ```
 
+## Deferring client start
+
+By default, the Unleash client will start polling the Proxy for toggles immediately when the `FlagProvider` component renders. You can delay the polling by:
+- setting the `startClient` prop to `false`
+- passing a client instance to the `FlagProvider`
+
+```jsx
+ReactDOM.render(
+  <React.StrictMode>
+    <FlagProvider unleashClient={client} startClient={false}>
+      <App />
+    </FlagProvider>
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+```
+
+Deferring the client start gives you more fine-grained control over when to start fetching the feature toggle configuration. This could be handy in cases where you need to get some other context data from the server before fetching toggles, for instance.
+
+To start the client, use the client's `start` method. The below snippet of pseudocode will defer polling until the end of the `asyncProcess` function.
+
+``` jsx
+const client = new UnleashClient({ /* ... */ })
+
+useEffect(() => {
+  const asyncProcess = async () => {
+    // do async work ...
+    client.start()
+  }
+  asyncProcess()
+, [])
+
+// Pass client as `unleashClient` and set `startClient` to `false`
+return <FlagProvider unleashClient={client} startClient={false} />
+
+return (
+  <FlagProvider unleashClient={client} startClient={false}>
+    <App />
+  </FlagProvider>
+)
+```
+
+# Usage
+
+## Check feature toggle status
+
 To check if a feature is enabled:
 
 ```jsx
@@ -74,6 +122,8 @@ const TestComponent = () => {
 
 export default TestComponent;
 ```
+
+## Check variants
 
 To check variants:
 
