@@ -12,7 +12,7 @@ interface IFlagProvider {
   startClient?: boolean;
 }
 
-const FlagProvider: React.FC<IFlagProvider> = ({
+const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
   config,
   children,
   unleashClient,
