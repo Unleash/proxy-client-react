@@ -8,7 +8,7 @@ const useContextSpy = jest.spyOn(React, 'useContext');
 const clientMock = jest.fn();
 clientMock.mockReturnValue({});
 
-test('should return the updateContext function from context', () => {
+test('should return the client when calling useUnleashClient', () => {
   useContextSpy.mockReturnValue({ client: clientMock });
   const { result } = renderHook(() => useUnleashClient());
 
