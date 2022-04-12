@@ -89,7 +89,7 @@ useEffect(() => {
 	// do async work ...
 	client.start()
     }
-	asyncProcess()
+    asyncProcess()
   }, [])
 
 return (
