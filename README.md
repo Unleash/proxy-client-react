@@ -85,13 +85,12 @@ To start the client, use the client's `start` method. The below snippet of pseud
 const client = new UnleashClient({ /* ... */ })
 
 useEffect(() => {
-  const asyncProcess = async () => {
-    // do async work ...
-    client.start()
-  }
-  asyncProcess()
-, [])
-
+    const asyncProcess = async () => {
+	// do async work ...
+	client.start()
+    }
+	asyncProcess()
+  }, [])
 
 return (
   // Pass client as `unleashClient` and set `startClient` to `false`
