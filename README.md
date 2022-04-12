@@ -92,10 +92,9 @@ useEffect(() => {
   asyncProcess()
 , [])
 
-// Pass client as `unleashClient` and set `startClient` to `false`
-return <FlagProvider unleashClient={client} startClient={false} />
 
 return (
+  // Pass client as `unleashClient` and set `startClient` to `false`
   <FlagProvider unleashClient={client} startClient={false}>
     <App />
   </FlagProvider>
