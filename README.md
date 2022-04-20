@@ -9,6 +9,8 @@ npm install @unleash/proxy-client-react
 // or
 yarn add @unleash/proxy-client-react
 ```
+# Upgrade path from v1 -> v2
+If you were previously using the built in Async storage used in the unleash-proxy-client-js, this no longer comes bundled with the library. You will need to install the storage adapter for your preferred storage solution. Otherwise there are no breaking changes.
 
 # Initialization
 
@@ -189,7 +191,32 @@ const MyComponent = ({ userId }) => {
 
 ```
 
+## Use unleash client directly
+
+```jsx
+import { useUnleashContext, useUnleashClient } from '@unleash/proxy-client-react'
+
+const MyComponent = ({ userId }) => {
+  const client = useUnleashClient();
+
+  const updateContext = useUnleashContext();
+
+  const login = () => {
+    // login user
+    if (client.isEnabled("new-onboarding")) {
+      // Send user to new onboarding flow
+    } else (
+      // send user to old onboarding flow
+    )
+  }
+
+  return <LoginForm login={login}/>
+}
+```
+
 ## React Native
+
+IMPORTANT: This no longer comes included in the unleash-proxy-client-js library. You will need to install the storage adapter for your preferred storage solution.
 
 Because React Native doesn't run in a web browser, it doesn't have access to the `localStorage` API. Instead, you need to tell Unleash to use your specific storage provider. The most common storage provider for React Native is [AsyncStorage](https://github.com/react-native-async-storage/async-storage).
 To configure it, add the following property to your configuration object:
