@@ -43,9 +43,9 @@
     "typescript": "^4.4.3",
     "webpack": "^5.35.1",
     "webpack-cli": "^4.6.0",
-    "unleash-proxy-client": "v2.0.0"
+    "unleash-proxy-client": "2.0.0"
   },
   "peerDependencies": {
-    "unleash-proxy-client": "v2.0.0"
+    "unleash-proxy-client": "2.0.0"
   }
 }
