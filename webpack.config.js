@@ -1,11 +1,10 @@
 var path = require('path');
 
-module.exports = {
+const getCommonConfig = (outputFileName) => ({
   entry: './src/index.ts',
-  target: 'node',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'index.js',
+    filename: outputFileName,
     libraryTarget: 'commonjs2',
   },
   module: {
@@ -20,5 +19,17 @@ module.exports = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
   },
-  externals: ['commonjs', 'react'],
+  externals: ['commonjs', 'react', 'unleash-proxy-client'],
+});
+
+const client = {
+  ...getCommonConfig('index.browser.js'),
+  target: 'web',
 };
+
+const server = {
+  ...getCommonConfig('index.js'),
+  target: 'node',
+};
+
+module.exports = [client, server];
