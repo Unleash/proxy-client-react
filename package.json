@@ -46,6 +46,6 @@
     "unleash-proxy-client": "2.0.0"
   },
   "peerDependencies": {
-    "unleash-proxy-client": "2.0.0"
+    "unleash-proxy-client": "2.0.1"
   }
 }
