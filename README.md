@@ -12,6 +12,13 @@ yarn add @unleash/proxy-client-react
 # Upgrade path from v1 -> v2
 If you were previously using the built in Async storage used in the unleash-proxy-client-js, this no longer comes bundled with the library. You will need to install the storage adapter for your preferred storage solution. Otherwise there are no breaking changes.
 
+# Upgrade path from v2 -> v3
+Previously the unleash client was bundled as dependency directly in this library. It's now changed to a peer dependency and listed as an external.
+
+In v2 there was only one distribution based on the fact that webpack polyfilled the necessary features in v4. This is no longer the case in webpack v5. We now provide two distribution builds, one for the server and one for the client - and use the browser field in the npm package to hint module builders about which version to use. The default `dist/index.js` file points to the node version, while the web build is located at `dist/index.browser.js`
+
+Upgrading should be as easy as running yarn again with the new version, but we made the made bump regardless to be safe.
+
 # Initialization
 
 Import the provider like this in your entrypoint file (typically index.js/ts):
