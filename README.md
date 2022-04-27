@@ -94,7 +94,7 @@ To start the client, use the client's `start` method. The below snippet of pseud
 const client = new UnleashClient({ /* ... */ })
 
 useEffect(() => {
-    const asyncProcess = async () => {
+  const asyncProcess = async () => {
 	// do async work ...
 	client.start()
     }
@@ -238,4 +238,77 @@ const config = {
     }
   },
 };
+```
+
+## Usage with class components
+Since this library uses hooks you have to implement a wrapper to use with class components. Beneath you can find an example of how to use this library with class components, using a custom wrapper:
+
+```jsx
+import React from "react";
+import {
+  useFlag,
+  useUnleashClient,
+  useUnleashContext,
+  useVariant,
+  useFlagsStatus
+} from "@unleash/proxy-client-react";
+
+interface IUnleashClassFlagProvider {
+  render: (props: any) => React.ReactNode;
+  flagName: string;
+}
+
+export const UnleashClassFlagProvider = ({
+  render,
+  flagName
+}: IUnleashClassFlagProvider) => {
+  const enabled = useFlag(flagName);
+  const variant = useVariant(flagName);
+  const client = useUnleashClient();
+
+  const { updateContext } = useUnleashContext();
+  const { flagsReady, flagsError } = useFlagsStatus();
+
+  const isEnabled = () => {
+    return enabled;
+  };
+
+  const getVariant = () => {
+    return variant;
+  };
+
+  const getClient = () => {
+    return client;
+  };
+
+  const getUnleashContextSetter = () => {
+    return updateContext;
+  };
+
+  const getFlagsStatus = () => {
+    return { flagsReady, flagsError };
+  };
+
+  return (
+    <>
+      {render({
+        isEnabled,
+        getVariant,
+        getClient,
+        getUnleashContextSetter,
+        getFlagsStatus
+      })}
+    </>
+  );
+};
+```
+
+Wrap your components like so: 
+```jsx
+    <UnleashClassFlagProvider
+      flagName="demoApp.step1"
+      render={({ isEnabled, getClient }) => (
+        <MyClassComponent isEnabled={isEnabled} getClient={getClient} />
+      )}
+    />
 ```
