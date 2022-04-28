@@ -5,9 +5,9 @@ This library is meant to be used with the [unleash-proxy](https://github.com/Unl
 # Installation
 
 ```bash
-npm install @unleash/proxy-client-react
+npm install @unleash/proxy-client-react unleash-proxy-client
 // or
-yarn add @unleash/proxy-client-react
+yarn add @unleash/proxy-client-react unleash-proxy-client
 ```
 # Upgrade path from v1 -> v2
 If you were previously using the built in Async storage used in the unleash-proxy-client-js, this no longer comes bundled with the library. You will need to install the storage adapter for your preferred storage solution. Otherwise there are no breaking changes.
@@ -17,7 +17,7 @@ Previously the unleash client was bundled as dependency directly in this library
 
 In v2 there was only one distribution based on the fact that webpack polyfilled the necessary features in v4. This is no longer the case in webpack v5. We now provide two distribution builds, one for the server and one for the client - and use the browser field in the npm package to hint module builders about which version to use. The default `dist/index.js` file points to the node version, while the web build is located at `dist/index.browser.js`
 
-Upgrading should be as easy as running yarn again with the new version, but we made the made bump regardless to be safe.
+Upgrading should be as easy as running yarn again with the new version, but we made the made bump regardless to be safe. Note: If you are not able to resolve the peer dependency on `unleash-proxy-client` you might need to run `npm install unleash-proxy-client`
 
 # Initialization
 
