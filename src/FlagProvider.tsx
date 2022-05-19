@@ -48,7 +48,7 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
     }
   }, []);
 
-  const updateContext = async (context: IContext): Promise<void> => {
+  const updateContext: IFlagContextValue['updateContext'] = async (context) => {
     await client.current.updateContext(context);
   };
 
@@ -68,13 +68,13 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
     () => ({
       on,
       updateContext,
-      isEnabled,
-      getVariant,
-      client: client.current,
-      flagsReady,
-      flagsError,
-      setFlagsReady,
-      setFlagsError,
+      // isEnabled,
+      // getVariant,
+      // client: client.current,
+      // flagsReady,
+      // flagsError,
+      // setFlagsReady,
+      // setFlagsError,
     }),
     [flagsReady, flagsError]
   );
