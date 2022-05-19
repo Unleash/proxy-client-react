@@ -24,7 +24,7 @@ Upgrading should be as easy as running yarn again with the new version, but we m
 Import the provider like this in your entrypoint file (typically index.js/ts):
 
 ```jsx
-import FlagProvider from '@unleash/proxy-client-react';
+import { FlagProvider } from '@unleash/proxy-client-react';
 
 const config = {
   url: 'https://HOSTNAME/proxy',
@@ -47,7 +47,7 @@ ReactDOM.render(
 Alternatively, you can pass your own client in to the FlagProvider:
 
 ```jsx
-import FlagProvider, { UnleashClient } from '@unleash/proxy-client-react';
+import { FlagProvider, UnleashClient } from '@unleash/proxy-client-react';
 
 const config = {
   url: 'https://HOSTNAME/proxy',
