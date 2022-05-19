@@ -1,5 +1,5 @@
 import React from 'react';
-import type { IContext, UnleashClient } from 'unleash-proxy-client';
+import type { IContext, IVariant, UnleashClient } from 'unleash-proxy-client';
 
 type eventArgs = [Function, any];
 
@@ -7,6 +7,7 @@ export interface IFlagContextValue {
   on(event: string, ...args: eventArgs): UnleashClient;
   updateContext(context: IContext): Promise<void>;
   isEnabled(name: string): boolean;
+  getVariant(toggleName: string): IVariant;
   client: UnleashClient;
   flagsReady: boolean;
   setFlagsReady: React.Dispatch<

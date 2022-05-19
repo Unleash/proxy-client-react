@@ -56,8 +56,8 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
     return client.current.isEnabled(name);
   };
 
-  const getVariant = (name: string) => {
-    return client.current.getVariant(name);
+  const getVariant: IFlagContextValue['getVariant'] = (toggleName) => {
+    return client.current.getVariant(toggleName);
   };
 
   const on: IFlagContextValue['on'] = (event, ...args) => {
@@ -69,7 +69,7 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
       on,
       updateContext,
       isEnabled,
-      // getVariant,
+      getVariant,
       client: client.current,
       flagsReady,
       flagsError,
