@@ -70,7 +70,7 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
       updateContext,
       isEnabled,
       // getVariant,
-      // client: client.current,
+      client: client.current,
       // flagsReady,
       // flagsError,
       // setFlagsReady,
