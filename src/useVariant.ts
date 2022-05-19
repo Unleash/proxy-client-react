@@ -5,7 +5,7 @@ const useVariant = (name: string) => {
   const { getVariant, client } = useContext(FlagContext);
 
   const [variant, setVariant] = useState(getVariant(name));
-  const variantRef = useRef<any>();
+  const variantRef = useRef<typeof variant>();
   variantRef.current = variant;
 
   useEffect(() => {
