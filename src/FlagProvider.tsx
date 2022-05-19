@@ -1,10 +1,8 @@
 /** @format */
 
 import * as React from 'react';
+import { IConfig, UnleashClient } from 'unleash-proxy-client';
 import FlagContext, { IFlagContextValue } from './FlagContext';
-import { UnleashClient, IConfig, IContext } from 'unleash-proxy-client';
-
-type eventArgs = [Function, any];
 
 interface IFlagProvider {
   config?: IConfig;
