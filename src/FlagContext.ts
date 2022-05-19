@@ -8,6 +8,14 @@ export interface IFlagContextValue {
   updateContext(context: IContext): Promise<void>;
   isEnabled(name: string): boolean;
   client: UnleashClient;
+  flagsReady: boolean;
+  setFlagsReady: React.Dispatch<
+    React.SetStateAction<IFlagContextValue['flagsReady']>
+  >;
+  flagsError: any;
+  setFlagsError: React.Dispatch<
+    React.SetStateAction<IFlagContextValue['flagsError']>
+  >;
 }
 
 const FlagContext = React.createContext<IFlagContextValue>(null as never);
