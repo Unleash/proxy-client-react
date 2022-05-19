@@ -6,6 +6,7 @@ type eventArgs = [Function, any];
 export interface IFlagContextValue {
   on(event: string, ...args: eventArgs): UnleashClient;
   updateContext(context: IContext): Promise<void>;
+  isEnabled(name: string): boolean;
 }
 
 const FlagContext = React.createContext<IFlagContextValue>(null as never);

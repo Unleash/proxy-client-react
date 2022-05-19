@@ -52,7 +52,7 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
     await client.current.updateContext(context);
   };
 
-  const isEnabled = (name: string) => {
+  const isEnabled: IFlagContextValue['isEnabled'] = (name) => {
     return client.current.isEnabled(name);
   };
 
@@ -68,7 +68,7 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
     () => ({
       on,
       updateContext,
-      // isEnabled,
+      isEnabled,
       // getVariant,
       // client: client.current,
       // flagsReady,
