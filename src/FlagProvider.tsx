@@ -1,7 +1,7 @@
 /** @format */
 
 import * as React from 'react';
-import FlagContext from './FlagContext';
+import FlagContext, { IFlagContextValue } from './FlagContext';
 import { UnleashClient, IConfig, IContext } from 'unleash-proxy-client';
 
 type eventArgs = [Function, any];
@@ -60,11 +60,11 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
     return client.current.getVariant(name);
   };
 
-  const on = (event: string, ...args: eventArgs) => {
+  const on: IFlagContextValue['on'] = (event, ...args) => {
     return client.current.on(event, ...args);
   };
 
-  const context = React.useMemo(
+  const context = React.useMemo<IFlagContextValue>(
     () => ({
       on,
       updateContext,
