@@ -50,16 +50,16 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
     await client.current.updateContext(context);
   };
 
-  const isEnabled: IFlagContextValue['isEnabled'] = (name) => {
-    return client.current.isEnabled(name);
+  const isEnabled: IFlagContextValue['isEnabled'] = (toggleName) => {
+    return client.current.isEnabled(toggleName);
   };
 
   const getVariant: IFlagContextValue['getVariant'] = (toggleName) => {
     return client.current.getVariant(toggleName);
   };
 
-  const on: IFlagContextValue['on'] = (event, ...args) => {
-    return client.current.on(event, ...args);
+  const on: IFlagContextValue['on'] = (event, callback, ctx) => {
+    return client.current.on(event, callback, ctx);
   };
 
   const context = React.useMemo<IFlagContextValue>(
