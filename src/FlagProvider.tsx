@@ -1,10 +1,8 @@
 /** @format */
 
 import * as React from 'react';
-import FlagContext from './FlagContext';
-import { UnleashClient, IConfig, IContext } from 'unleash-proxy-client';
-
-type eventArgs = [Function, any];
+import { IConfig, UnleashClient } from 'unleash-proxy-client';
+import FlagContext, { IFlagContextValue } from './FlagContext';
 
 interface IFlagProvider {
   config?: IConfig;
@@ -48,23 +46,23 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
     }
   }, []);
 
-  const updateContext = async (context: IContext): Promise<void> => {
+  const updateContext: IFlagContextValue['updateContext'] = async (context) => {
     await client.current.updateContext(context);
   };
 
-  const isEnabled = (name: string) => {
-    return client.current.isEnabled(name);
+  const isEnabled: IFlagContextValue['isEnabled'] = (toggleName) => {
+    return client.current.isEnabled(toggleName);
   };
 
-  const getVariant = (name: string) => {
-    return client.current.getVariant(name);
+  const getVariant: IFlagContextValue['getVariant'] = (toggleName) => {
+    return client.current.getVariant(toggleName);
   };
 
-  const on = (event: string, ...args: eventArgs) => {
-    return client.current.on(event, ...args);
+  const on: IFlagContextValue['on'] = (event, callback, ctx) => {
+    return client.current.on(event, callback, ctx);
   };
 
-  const context = React.useMemo(
+  const context = React.useMemo<IFlagContextValue>(
     () => ({
       on,
       updateContext,

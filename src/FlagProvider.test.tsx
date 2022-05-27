@@ -49,20 +49,23 @@ UnleashClientSpy.mockReturnValue({
   on: onMock,
 });
 
+const noop = () => {};
+
 const FlagConsumerAfterClientInit = () => {
   const { updateContext, isEnabled, getVariant, client, on } =
     useContext(FlagContext);
-  const [enabled, setIsEnabled] = useState('nothing');
-  const [variant, setVariant] = useState('nothing');
-  const [context, setContext] = useState('nothing');
-  const [currentOn, setCurrentOn] = useState('nothing');
+  const [enabled, setIsEnabled] = useState(false);
+  const [variant, setVariant] = useState<UnleashClientModule.IVariant>(null);
+  const [context, setContext] = useState<any>('nothing');
+  const [currentOn, setCurrentOn] =
+    useState<UnleashClientModule.UnleashClient>(null);
 
   useEffect(() => {
     if (client) {
       setIsEnabled(isEnabled(givenFlagName));
       setVariant(getVariant(givenFlagName));
-      setContext(updateContext(givenContext));
-      setCurrentOn(on('someEvent', 'someArgument'));
+      setContext(updateContext(givenContext as any));
+      setCurrentOn(on('someEvent', noop, 'someArgument'));
     }
   }, [client]);
 
@@ -79,17 +82,18 @@ const FlagConsumerAfterClientInit = () => {
 const FlagConsumerBeforeClientInit = () => {
   const { updateContext, isEnabled, getVariant, client, on } =
     useContext(FlagContext);
-  const [enabled, setIsEnabled] = useState('nothing');
-  const [variant, setVariant] = useState('nothing');
-  const [context, setContext] = useState('nothing');
-  const [currentOn, setCurrentOn] = useState('nothing');
+  const [enabled, setIsEnabled] = useState(false);
+  const [variant, setVariant] = useState<UnleashClientModule.IVariant>(null);
+  const [context, setContext] = useState<any>('nothing');
+  const [currentOn, setCurrentOn] =
+    useState<UnleashClientModule.UnleashClient>(null);
 
   useEffect(() => {
     if (!client) {
       setIsEnabled(isEnabled(givenFlagName));
       setVariant(getVariant(givenFlagName));
-      setContext(updateContext(givenContext));
-      setCurrentOn(on('someEvent', 'someArgument'));
+      setContext(updateContext(givenContext as any));
+      setCurrentOn(on('someEvent', noop, 'someArgument'));
     }
   }, []);
 
@@ -110,9 +114,7 @@ const renderConsumerWithUnleashClient = (
   ui: any,
   { providerProps, renderOptions }: renderConsumerOptions
 ) => {
-  const client = new UnleashClientModule.UnleashClient(
-    providerProps.config
-  );
+  const client = new UnleashClientModule.UnleashClient(providerProps.config);
   return render(
     <FlagProvider unleashClient={client}>{ui}</FlagProvider>,
     renderOptions
@@ -135,9 +137,9 @@ test('A consumer that subscribes AFTER client init shows values from provider an
   expect(screen.getByText(/consuming value isEnabled/)).toHaveTextContent(
     'consuming value isEnabled true'
   );
-  expect(
-    screen.getByText(/consuming value updateContext/)
-  ).toHaveTextContent('consuming value updateContext [object Promise]');
+  expect(screen.getByText(/consuming value updateContext/)).toHaveTextContent(
+    'consuming value updateContext [object Promise]'
+  );
   expect(screen.getByText(/consuming value getVariant/)).toHaveTextContent(
     'consuming value getVariant A'
   );
@@ -177,9 +179,9 @@ test('A consumer should be able to get a variant when the client is passed into 
   expect(screen.getByText(/consuming value isEnabled/)).toHaveTextContent(
     'consuming value isEnabled true'
   );
-  expect(
-    screen.getByText(/consuming value updateContext/)
-  ).toHaveTextContent('consuming value updateContext [object Promise]');
+  expect(screen.getByText(/consuming value updateContext/)).toHaveTextContent(
+    'consuming value updateContext [object Promise]'
+  );
   expect(screen.getByText(/consuming value getVariant/)).toHaveTextContent(
     'consuming value getVariant A'
   );
@@ -233,9 +235,7 @@ test('should update when ready event is sent', () => {
     config: givenConfig,
   };
 
-  const client = new UnleashClientModule.UnleashClient(
-    providerProps.config
-  );
+  const client = new UnleashClientModule.UnleashClient(providerProps.config);
 
   render(
     <FlagProvider unleashClient={client}>
@@ -249,10 +249,7 @@ test('should update when ready event is sent', () => {
     }
   });
 
-  expect(localMock).toHaveBeenCalledWith(
-    EVENTS.READY,
-    expect.any(Function)
-  );
+  expect(localMock).toHaveBeenCalledWith(EVENTS.READY, expect.any(Function));
 });
 
 test('should register error when error event is sent', () => {
@@ -269,9 +266,7 @@ test('should register error when error event is sent', () => {
     config: givenConfig,
   };
 
-  const client = new UnleashClientModule.UnleashClient(
-    providerProps.config
-  );
+  const client = new UnleashClientModule.UnleashClient(providerProps.config);
 
   render(
     <FlagProvider unleashClient={client}>
@@ -285,10 +280,7 @@ test('should register error when error event is sent', () => {
     }
   });
 
-  expect(localMock).toHaveBeenCalledWith(
-    EVENTS.ERROR,
-    expect.any(Function)
-  );
+  expect(localMock).toHaveBeenCalledWith(EVENTS.ERROR, expect.any(Function));
 });
 
 test('should not start client if startClient is false', () => {

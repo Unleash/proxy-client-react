@@ -1,8 +1,6 @@
 /** @format */
 
-import { useState, useEffect, useContext } from 'react';
-import { EVENTS } from 'unleash-proxy-client';
-
+import { useContext } from 'react';
 import FlagContext from './FlagContext';
 
 const useFlagsStatus = () => {
