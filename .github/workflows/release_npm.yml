@@ -1,0 +1,24 @@
+name: "Release NPM package"
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Publish to npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+          registry-url: "https://registry.npmjs.org"
+      - run: |
+          yarn install --frozen-lockfile
+      - run: |
+          TAG=$(echo $GITHUB_REF_NAME | grep -oP '^v\d+\.\d+\.\d+-?\K(\w+)?')
+          npm publish --tag ${TAG:-latest}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
