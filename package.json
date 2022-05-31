@@ -1,6 +1,6 @@
 {
   "name": "@unleash/proxy-client-react",
-  "version": "3.0.0",
+  "version": "3.0.1-beta.0",
   "description": "React interface for working with unleash",
   "main": "./dist/index.js",
   "browser": "./dist/index.browser.js",
@@ -9,7 +9,6 @@
     "dist",
     "LICENCE.txt"
   ],
-  "licence": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/Unleash/unleash-proxy-react"
@@ -23,7 +22,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "devDependencies": {
     "@babel/core": "^7.15.5",
     "@babel/preset-env": "^7.15.4",
