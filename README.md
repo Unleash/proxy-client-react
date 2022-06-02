@@ -24,6 +24,7 @@ Upgrading should be as easy as running yarn again with the new version, but we m
 Import the provider like this in your entrypoint file (typically index.js/ts):
 
 ```jsx
+import { createRoot } from 'react-dom/client';
 import { FlagProvider } from '@unleash/proxy-client-react';
 
 const config = {
@@ -34,19 +35,21 @@ const config = {
   environment: 'dev',
 };
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root'));
+
+root.render(
   <React.StrictMode>
     <FlagProvider config={config}>
       <App />
     </FlagProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );
 ```
 
 Alternatively, you can pass your own client in to the FlagProvider:
 
 ```jsx
+import { createRoot } from 'react-dom/client';
 import { FlagProvider, UnleashClient } from '@unleash/proxy-client-react';
 
 const config = {
@@ -58,14 +61,14 @@ const config = {
 };
 
 const client = new UnleashClient(config);
+const root = createRoot(document.getElementById('root'));
 
-ReactDOM.render(
+root.render(
   <React.StrictMode>
     <FlagProvider unleashClient={client}>
       <App />
     </FlagProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );
 ```
 
@@ -76,13 +79,12 @@ By default, the Unleash client will start polling the Proxy for toggles immediat
 - passing a client instance to the `FlagProvider`
 
 ```jsx
-ReactDOM.render(
+root.render(
   <React.StrictMode>
     <FlagProvider unleashClient={client} startClient={false}>
       <App />
     </FlagProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );
 ```
 
