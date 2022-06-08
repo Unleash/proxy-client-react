@@ -1,8 +1,8 @@
-name: "Release changelog on GitHub"
+name: 'Release changelog on GitHub'
 on:
   push:
     tags:
-      - "v*"
+      - 'v*'
 
 jobs:
   release:
@@ -15,7 +15,7 @@ jobs:
         id: github_release
         uses: metcalfc/changelog-generator@v2.0.0
         with:
-          myToken: ${{ secrets.GITHUB_TOKEN }}
+          myToken: ${{ secrets.GH_TOKEN }}
       - name: Create release
         uses: actions/create-release@v1
         with:
@@ -23,4 +23,4 @@ jobs:
           release_name: ${{ github.ref }}
           body: ${{ steps.github_release.outputs.changelog }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN}}
