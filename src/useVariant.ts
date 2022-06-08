@@ -1,7 +1,8 @@
 import { useContext, useState, useEffect, useRef } from 'react';
+import { IVariant } from 'unleash-proxy-client';
 import FlagContext from './FlagContext';
 
-const useVariant = (name: string) => {
+const useVariant = (name: string): Partial<IVariant> => {
   const { getVariant, client } = useContext(FlagContext);
 
   const [variant, setVariant] = useState(getVariant(name));
