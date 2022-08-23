@@ -268,7 +268,7 @@ export const UnleashClassFlagProvider = ({
   const variant = useVariant(flagName);
   const client = useUnleashClient();
 
-  const { updateContext } = useUnleashContext();
+  const updateContext = useUnleashContext();
   const { flagsReady, flagsError } = useFlagsStatus();
 
   const isEnabled = () => {
