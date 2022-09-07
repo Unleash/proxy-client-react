@@ -317,9 +317,13 @@ Wrap your components like so:
 
 ## Server-side rendering (SSR) / Next.js
 
-> **Notice:** This client SDK _can_ be used with server-side rendering (SSR). However, it does require you to make certain changes, as detailed below. First-class support for SSR is something we'd like to look into, but it is not prioritized at the moment. If you'd like to help us improve the support, let us know in an issue/PR or [on Slack](slack.unleash.run)!
->
-> The code samples below are adapted from issues [#40](https://github.com/Unleash/proxy-client-react/issues/40#issuecomment-1048761755 "GitHub issue #40") and [#50](https://github.com/Unleash/proxy-client-react/issues/50 "GitHub issue #50"). Refer to the issues for more information and context.
+-----
+
+**⚠️ Note:️**This client SDK _can_ be used with server-side rendering (SSR). However, it does require you to make certain changes, as detailed below. First-class support for SSR is something we'd like to look into, but it is not prioritized at the moment. If you'd like to help us improve the support, let us know in an issue/PR or [on Slack](slack.unleash.run)!
+
+The code samples below are adapted from issues [#40](https://github.com/Unleash/proxy-client-react/issues/40#issuecomment-1048761755 "GitHub issue #40") and [#50](https://github.com/Unleash/proxy-client-react/issues/50 "GitHub issue #50"). Refer to these issues for more information and context.
+
+-----
 
 You can use the client for server-side rendering in a few different ways, each of which have their own advantages and drawbacks. The three main ways are:
 
