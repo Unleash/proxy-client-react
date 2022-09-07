@@ -338,6 +338,12 @@ If you want to use this client to evaluate feature client-side, then you need to
 <!-- Todo: explain what this is and how it works -->
 
 ```js
+import {
+    FlagProvider,
+    InMemoryStorageProvider,
+    UnleashClient
+} from '@unleash/proxy-client-react';
+
 export async function getServerSideProps() {
   // Set up unleash to fetch only once in order to not create
   // bindings for every request (which would cause a memory leak)
@@ -370,6 +376,12 @@ export async function getServerSideProps() {
 And then
 
 ```js
+import {
+    FlagProvider,
+    InMemoryStorageProvider,
+    UnleashClient
+} from '@unleash/proxy-client-react';
+
 // sample config
 const config = {
   url: 'https://app.unleash-hosted.com/demo/proxy',
