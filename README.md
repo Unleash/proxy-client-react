@@ -335,7 +335,7 @@ You can use the client for server-side rendering in a few different ways, each o
 
 The examples below are tailored towards Next.js, but you should be able to adopt them to other settings.
 
-If you want to use this client to evaluate feature client-side, then you need to provide an alternative implementation of `fetch`, using the configuration's `fetch` property, and a storage provider, using the `storageProvider` property. By default, this client tries to use `window.fetch` to retrieve toggles for evaluation and `window.localStorage` as a storage provider, but `window` isn't available during server-side rendering.
+If you want to use this client to evaluate features server-side, then you need to provide an alternative implementation of `fetch`, using the configuration's `fetch` property, and a storage provider, using the `storageProvider` property. By default, this client tries to use `window.fetch` to retrieve toggles for evaluation and `window.localStorage` as a storage provider, but `window` isn't available during server-side rendering.
 
 ### Prefetching toggles (Next.js)
 
