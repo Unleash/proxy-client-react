@@ -22,6 +22,7 @@ interface renderConsumerOptions {
 const getVariantMock = jest.fn().mockReturnValue('A');
 const updateContextMock = jest.fn();
 const startClientMock = jest.fn();
+const stopClientMock = jest.fn();
 const onMock = jest.fn().mockReturnValue('subscribed');
 const isEnabledMock = jest.fn().mockReturnValue(true);
 const UnleashClientSpy: jest.SpyInstance = jest.spyOn(
@@ -45,6 +46,7 @@ UnleashClientSpy.mockReturnValue({
   getVariant: getVariantMock,
   updateContext: updateContextMock,
   start: startClientMock,
+  stop: stopClientMock,
   isEnabled: isEnabledMock,
   on: onMock,
 });
@@ -227,6 +229,7 @@ test('should update when ready event is sent', () => {
     getVariant: getVariantMock,
     updateContext: updateContextMock,
     start: startClientMock,
+    stop: stopClientMock,
     isEnabled: isEnabledMock,
     on: localMock,
   });
@@ -258,6 +261,7 @@ test('should register error when error event is sent', () => {
     getVariant: getVariantMock,
     updateContext: updateContextMock,
     start: startClientMock,
+    stop: stopClientMock,
     isEnabled: isEnabledMock,
     on: localMock,
   });
@@ -285,10 +289,12 @@ test('should register error when error event is sent', () => {
 
 test('should not start client if startClient is false', () => {
   const localMock = jest.fn();
+  const stopMock = jest.fn();
   UnleashClientSpy.mockReturnValue({
     getVariant: getVariantMock,
     updateContext: updateContextMock,
     start: localMock,
+    stop: stopMock,
     isEnabled: isEnabledMock,
     on: onMock,
   });
@@ -306,4 +312,5 @@ test('should not start client if startClient is false', () => {
   );
 
   expect(localMock).not.toHaveBeenCalled();
+  expect(stopMock).not.toHaveBeenCalled();
 });
