@@ -43,7 +43,7 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
     const shouldStartClient = startClient || !unleashClient;
     if (shouldStartClient) {
       // defensively stop the client first
-      client.current?.stop();
+      client.current.stop();
       // start the client
       client.current.start();
     }
@@ -52,7 +52,6 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
     return function cleanup() {
       if (client.current) {
         client.current.stop();
-        client.current = undefined;
       }
     };
   }, []);
