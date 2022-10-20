@@ -17,6 +17,7 @@ export {
 import FlagContext from './FlagContext';
 import FlagProvider from './FlagProvider';
 import useFlag from './useFlag';
+import useFlags from './useFlags';
 import useFlagsStatus from './useFlagsStatus';
 import useVariant from './useVariant';
 import useUnleashContext from './useUnleashContext';
@@ -26,6 +27,7 @@ export {
   FlagContext,
   FlagProvider,
   useFlag,
+  useFlags,
   useFlagsStatus,
   useVariant,
   useUnleashContext,
