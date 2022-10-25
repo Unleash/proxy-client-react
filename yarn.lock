@@ -3945,7 +3945,7 @@ universalify@^0.1.2:
   resolved "https://registry.npmjs.org/universalify/-/universalify-0.1.2.tgz"
   integrity sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==
 
-unleash-proxy-client@2.3.0:
+unleash-proxy-client@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/unleash-proxy-client/-/unleash-proxy-client-2.3.0.tgz#30937d782a99ada6b9cb3012e824c232c64dab9c"
   integrity sha512-UYDZjjsIF+n01LnijR8t/FXOM5XPnjZkE5K/E+SInFzBfL1SckYZHiuzii1/4QmiRo/x+vjx9LJjAzE8JRas4Q==
