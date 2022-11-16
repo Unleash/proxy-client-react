@@ -33,6 +33,7 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
 
   client.current.on('ready', () => {
     setFlagsReady(true);
+    setFlagsError(null);
   });
 
   client.current.on('error', (e: any) => {
