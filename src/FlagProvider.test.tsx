@@ -24,6 +24,7 @@ const updateContextMock = jest.fn();
 const startClientMock = jest.fn();
 const stopClientMock = jest.fn();
 const onMock = jest.fn().mockReturnValue('subscribed');
+const offMock = jest.fn();
 const isEnabledMock = jest.fn().mockReturnValue(true);
 const UnleashClientSpy: jest.SpyInstance = jest.spyOn(
   UnleashClientModule,
@@ -49,6 +50,7 @@ UnleashClientSpy.mockReturnValue({
   stop: stopClientMock,
   isEnabled: isEnabledMock,
   on: onMock,
+  off: offMock,
 });
 
 const noop = () => {};
