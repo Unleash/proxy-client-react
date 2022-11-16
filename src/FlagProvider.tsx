@@ -64,9 +64,9 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
     // stop unleash client on unmount
     return function cleanup() {
       if (client.current) {
-        client.current.stop();
         client.current.off('error', errorCallback);
         client.current.off('ready', readyCallback);
+        client.current.stop();
       }
     };
   }, []);
