@@ -10,8 +10,6 @@ interface IFlagProvider {
   startClient?: boolean;
 }
 
-let errorSet = false;
-
 const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
   config,
   children,
