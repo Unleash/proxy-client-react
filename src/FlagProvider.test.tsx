@@ -24,6 +24,7 @@ const updateContextMock = jest.fn();
 const startClientMock = jest.fn();
 const stopClientMock = jest.fn();
 const onMock = jest.fn().mockReturnValue('subscribed');
+const offMock = jest.fn();
 const isEnabledMock = jest.fn().mockReturnValue(true);
 const UnleashClientSpy: jest.SpyInstance = jest.spyOn(
   UnleashClientModule,
@@ -49,6 +50,7 @@ UnleashClientSpy.mockReturnValue({
   stop: stopClientMock,
   isEnabled: isEnabledMock,
   on: onMock,
+  off: offMock,
 });
 
 const noop = () => {};
@@ -232,6 +234,7 @@ test('should update when ready event is sent', () => {
     stop: stopClientMock,
     isEnabled: isEnabledMock,
     on: localMock,
+    off: offMock,
   });
 
   const providerProps = {
@@ -264,6 +267,7 @@ test('should register error when error event is sent', () => {
     stop: stopClientMock,
     isEnabled: isEnabledMock,
     on: localMock,
+    off: offMock,
   });
 
   const providerProps = {
@@ -297,6 +301,7 @@ test('should not start client if startClient is false', () => {
     stop: stopMock,
     isEnabled: isEnabledMock,
     on: onMock,
+    off: offMock,
   });
 
   const providerProps = {

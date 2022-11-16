@@ -19,6 +19,8 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
   const client = React.useRef<UnleashClient>(unleashClient);
   const [flagsReady, setFlagsReady] = React.useState(false);
   const [flagsError, setFlagsError] = React.useState(null);
+  const flagsErrorRef = React.useRef(null);
+  const callbackRegisteredRef = React.useRef(null);
 
   if (!config && !unleashClient) {
     console.warn(
@@ -31,13 +33,24 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
     client.current = new UnleashClient(config);
   }
 
-  client.current.on('ready', () => {
-    setFlagsReady(true);
-  });
+  const errorCallback = (e: any) => {
+    // Use a ref because regular event handlers are closing over state
+    // with stale values:
+    flagsErrorRef.current = e;
 
-  client.current.on('error', (e: any) => {
-    setFlagsError(e);
-  });
+    if (flagsErrorRef.current === null) {
+      setFlagsError(e);
+    }
+  };
+  const readyCallback = () => {
+    setFlagsReady(true);
+  };
+
+  if (!callbackRegisteredRef.current) {
+    client.current.on('ready', readyCallback);
+    client.current.on('error', errorCallback);
+    callbackRegisteredRef.current = 'set';
+  }
 
   React.useEffect(() => {
     const shouldStartClient = startClient || !unleashClient;
@@ -51,6 +64,8 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
     // stop unleash client on unmount
     return function cleanup() {
       if (client.current) {
+        client.current.off('error', errorCallback);
+        client.current.off('ready', readyCallback);
         client.current.stop();
       }
     };
