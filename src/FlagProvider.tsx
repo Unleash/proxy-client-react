@@ -36,7 +36,9 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
   });
 
   client.current.on('error', (e: any) => {
-    setFlagsError(e);
+    if (flagsError === null) {
+      setFlagsError(e);
+    }
   });
 
   React.useEffect(() => {
