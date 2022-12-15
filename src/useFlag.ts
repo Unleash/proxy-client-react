@@ -9,18 +9,28 @@ const useFlag = (name: string) => {
 
   useEffect(() => {
     if (!client) return;
-    client.on('update', () => {
+
+    const updateHandler = () => {
       const enabled = isEnabled(name);
       if (enabled !== flagRef.current) {
         flagRef.current = enabled;
         setFlag(!!enabled);
       }
-    });
+    };
 
-    client.on('ready', () => {
+    const readyHandler = () => {
       const enabled = isEnabled(name);
       setFlag(enabled);
-    });
+    };
+
+    client.on('update', updateHandler);
+
+    client.on('ready', readyHandler);
+
+    () => {
+      client.off('update', updateHandler);
+      client.off('ready', readyHandler);
+    };
   }, [client]);
 
   return flag;

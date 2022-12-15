@@ -4,7 +4,7 @@ import * as React from 'react';
 import { IConfig, UnleashClient } from 'unleash-proxy-client';
 import FlagContext, { IFlagContextValue } from './FlagContext';
 
-interface IFlagProvider {
+export interface IFlagProvider {
   config?: IConfig;
   unleashClient?: UnleashClient;
   startClient?: boolean;
