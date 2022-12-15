@@ -20,6 +20,7 @@ const useFlag = (name: string) => {
 
     const readyHandler = () => {
       const enabled = isEnabled(name);
+      flagRef.current = enabled;
       setFlag(enabled);
     };
 

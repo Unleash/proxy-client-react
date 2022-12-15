@@ -25,6 +25,8 @@ const useVariant = (name: string): Partial<IVariant> => {
 
     const readyHandler = () => {
       const variant = getVariant(name);
+      variantRef.current.name = variant.name;
+      variantRef.current.enabled = variant.enabled;
       setVariant(variant);
     };
 
