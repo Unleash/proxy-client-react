@@ -24,7 +24,6 @@ const useFlag = (name: string) => {
     };
 
     client.on('update', updateHandler);
-
     client.on('ready', readyHandler);
 
     () => {
