@@ -11,7 +11,8 @@ const useVariant = (name: string): Partial<IVariant> => {
 
   useEffect(() => {
     if (!client) return;
-    client.on('update', () => {
+
+    const updateHandler = () => {
       const newVariant = getVariant(name);
       if (
         variantRef.current.name !== newVariant.name ||
@@ -20,12 +21,22 @@ const useVariant = (name: string): Partial<IVariant> => {
         setVariant(newVariant);
         variantRef.current = newVariant;
       }
-    });
+    };
 
-    client.on('ready', () => {
+    const readyHandler = () => {
       const variant = getVariant(name);
+      variantRef.current.name = variant.name;
+      variantRef.current.enabled = variant.enabled;
       setVariant(variant);
-    });
+    };
+
+    client.on('update', updateHandler);
+    client.on('ready', readyHandler);
+
+    () => {
+      client.off('update', updateHandler);
+      client.off('ready', readyHandler);
+    };
   }, [client]);
 
   return variant || {};
