@@ -53,7 +53,7 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
   }
 
   React.useEffect(() => {
-    const shouldStartClient = startClient || !unleashClient;
+    const shouldStartClient = startClient && !unleashClient;
     if (shouldStartClient) {
       // defensively stop the client first
       client.current.stop();
