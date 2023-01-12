@@ -7,6 +7,7 @@ const getCommonConfig = (outputFileName) => ({
     filename: outputFileName,
     libraryTarget: 'commonjs2',
   },
+  devtool: 'source-map',
   module: {
     rules: [
       {
