@@ -14,26 +14,18 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
   config,
   children,
   unleashClient,
-  startClient = true,
+  startClient = typeof window !== undefined,
 }) => {
-  const client = React.useRef<UnleashClient>(unleashClient);
+  const client = React.useRef<UnleashClient>(
+    unleashClient || new UnleashClient(config)
+  );
   const [flagsReady, setFlagsReady] = React.useState(false);
   const [flagsError, setFlagsError] = React.useState(null);
+  const isStartedRef = React.useRef(false); // prevent double instantiation, https://github.com/reactwg/react-18/discussions/18
   const flagsErrorRef = React.useRef(null);
   const callbackRegisteredRef = React.useRef(null);
 
-  if (!config && !unleashClient) {
-    console.warn(
-      `You must provide either a config or an unleash client to the flag provider. If you are initializing the client in useEffect, you can avoid this warning by
-      checking if the client exists before rendering.`
-    );
-  }
-
-  if (!client.current) {
-    client.current = new UnleashClient(config);
-  }
-
-  const errorCallback = (e: any) => {
+  const errorCallback = React.useCallback((e: any) => {
     // Use a ref because regular event handlers are closing over state
     // with stale values:
     flagsErrorRef.current = e;
@@ -41,23 +33,30 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
     if (flagsErrorRef.current === null) {
       setFlagsError(e);
     }
-  };
-  const readyCallback = () => {
+  }, []);
+  const readyCallback = React.useCallback(() => {
     setFlagsReady(true);
-  };
-
-  if (!callbackRegisteredRef.current) {
-    client.current.on('ready', readyCallback);
-    client.current.on('error', errorCallback);
-    callbackRegisteredRef.current = 'set';
-  }
+  }, []);
 
   React.useEffect(() => {
-    const shouldStartClient = startClient && !unleashClient;
-    if (shouldStartClient) {
-      // defensively stop the client first
-      client.current.stop();
-      // start the client
+    if (!config && !unleashClient) {
+      console.warn(
+        `You must provide either a config or an unleash client to the flag provider. 
+        If you are initializing the client in useEffect, you can avoid this warning 
+        by checking if the client exists before rendering.`
+      );
+    }
+
+    if (!callbackRegisteredRef.current) {
+      client.current.on('ready', readyCallback);
+      client.current.on('error', errorCallback);
+      callbackRegisteredRef.current = 'set';
+    }
+
+    if (!isStartedRef.current && startClient) {
+      isStartedRef.current = true;
+
+      client.current.stop(); // defensively stop the client first
       client.current.start();
     }
 
