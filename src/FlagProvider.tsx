@@ -16,14 +16,22 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
   unleashClient,
   startClient = typeof window !== undefined,
 }) => {
+  if (!config && !unleashClient) {
+    console.warn(
+      `You must provide either a config or an unleash client to the flag provider. 
+      If you are initializing the client in useEffect, you can avoid this warning 
+      by checking if the client exists before rendering.`
+    );
+  }
+
   const client = React.useRef<UnleashClient>(
-    unleashClient || new UnleashClient(config)
+    unleashClient || new UnleashClient(config as IConfig)
   );
   const [flagsReady, setFlagsReady] = React.useState(false);
   const [flagsError, setFlagsError] = React.useState(null);
   const isStartedRef = React.useRef(false); // prevent double instantiation, https://github.com/reactwg/react-18/discussions/18
   const flagsErrorRef = React.useRef(null);
-  const callbackRegisteredRef = React.useRef(null);
+  const isCallbackRegisteredRef = React.useRef(false);
 
   const errorCallback = React.useCallback((e: any) => {
     // Use a ref because regular event handlers are closing over state
@@ -39,18 +47,10 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
   }, []);
 
   React.useEffect(() => {
-    if (!config && !unleashClient) {
-      console.warn(
-        `You must provide either a config or an unleash client to the flag provider. 
-        If you are initializing the client in useEffect, you can avoid this warning 
-        by checking if the client exists before rendering.`
-      );
-    }
-
-    if (!callbackRegisteredRef.current) {
+    if (!isCallbackRegisteredRef.current) {
       client.current.on('ready', readyCallback);
       client.current.on('error', errorCallback);
-      callbackRegisteredRef.current = 'set';
+      isCallbackRegisteredRef.current = true;
     }
 
     if (!isStartedRef.current && startClient) {

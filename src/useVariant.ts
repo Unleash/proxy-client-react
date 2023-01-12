@@ -15,8 +15,8 @@ const useVariant = (name: string): Partial<IVariant> => {
     const updateHandler = () => {
       const newVariant = getVariant(name);
       if (
-        variantRef.current.name !== newVariant.name ||
-        variantRef.current.enabled !== newVariant.enabled
+        variantRef.current?.name !== newVariant.name ||
+        variantRef.current?.enabled !== newVariant.enabled
       ) {
         setVariant(newVariant);
         variantRef.current = newVariant;
@@ -25,8 +25,10 @@ const useVariant = (name: string): Partial<IVariant> => {
 
     const readyHandler = () => {
       const variant = getVariant(name);
-      variantRef.current.name = variant.name;
-      variantRef.current.enabled = variant.enabled;
+      if (variantRef.current) {
+        variantRef.current.name = variant.name;
+        variantRef.current.enabled = variant.enabled;
+      }
       setVariant(variant);
     };
 
