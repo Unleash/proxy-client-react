@@ -4,5 +4,4 @@ module.exports = {
     "@babel/preset-typescript",
     "ts-node"
   ],
-  sourceMap: true,
 };
