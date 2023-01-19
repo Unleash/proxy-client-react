@@ -133,27 +133,30 @@ Deferring the client start gives you more fine-grained control over when to star
 To start the client, use the client's `start` method. The below snippet of pseudocode will defer polling until the end of the `asyncProcess` function.
 
 ```jsx
-const client = useRef(
-  new UnleashClient({
-    /* ... */
-  })
-);
+const MyAppComponent = () => {
+  const client = useRef(
+    new UnleashClient({
+      /* ... */
+    })
+  );
 
-useEffect(() => {
-  const asyncProcess = async () => {
-    // do async work ...
-    client.current.start();
-  };
-  asyncProcess();
-}, []);
+  useEffect(() => {
+    const asyncProcess = async () => {
+      // do async work ...
+      client.current.start();
+    };
+    asyncProcess();
+  }, []);
 
-return (
-  // Pass client as `unleashClient` and set `startClient` to `false`
-  <FlagProvider unleashClient={client.current} startClient={false}>
-    <App />
-  </FlagProvider>
-);
+  return (
+    // Pass client as `unleashClient` and set `startClient` to `false`
+    <FlagProvider unleashClient={client.current} startClient={false}>
+      <App />
+    </FlagProvider>
+  );
+}
 ```
+
 ## Use unleash client directly
 
 ```jsx
@@ -161,8 +164,6 @@ import { useUnleashContext, useUnleashClient } from '@unleash/proxy-client-react
 
 const MyComponent = ({ userId }) => {
   const client = useUnleashClient();
-
-  const updateContext = useUnleashContext();
 
   const login = () => {
     // login user
