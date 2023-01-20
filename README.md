@@ -1,5 +1,3 @@
-⚠️ This library can be used with the [Unleash Proxy](https://github.com/Unleash/unleash-proxy) or with the [Unleash front-end API](https://docs.getunleash.io/reference/front-end-api). It is not compatible with the [server-side Unleash client](https://docs.getunleash.io/reference/sdks#server-side-sdks) API. The proxy application layer will sit between your unleash instance and your client applications, and provides performance and security benefits.
-
 # Installation
 
 ```bash
