@@ -59,10 +59,12 @@ const FlagConsumerAfterClientInit = () => {
   const { updateContext, isEnabled, getVariant, client, on } =
     useContext(FlagContext);
   const [enabled, setIsEnabled] = useState(false);
-  const [variant, setVariant] = useState<UnleashClientModule.IVariant>(null);
+  const [variant, setVariant] = useState<UnleashClientModule.IVariant | null>(
+    null
+  );
   const [context, setContext] = useState<any>('nothing');
   const [currentOn, setCurrentOn] =
-    useState<UnleashClientModule.UnleashClient>(null);
+    useState<UnleashClientModule.UnleashClient | null>(null);
 
   useEffect(() => {
     if (client) {
@@ -87,10 +89,12 @@ const FlagConsumerBeforeClientInit = () => {
   const { updateContext, isEnabled, getVariant, client, on } =
     useContext(FlagContext);
   const [enabled, setIsEnabled] = useState(false);
-  const [variant, setVariant] = useState<UnleashClientModule.IVariant>(null);
+  const [variant, setVariant] = useState<UnleashClientModule.IVariant | null>(
+    null
+  );
   const [context, setContext] = useState<any>('nothing');
   const [currentOn, setCurrentOn] =
-    useState<UnleashClientModule.UnleashClient>(null);
+    useState<UnleashClientModule.UnleashClient | null>(null);
 
   useEffect(() => {
     if (!client) {
