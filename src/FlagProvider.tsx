@@ -10,13 +10,24 @@ export interface IFlagProvider {
   startClient?: boolean;
 }
 
+const offlineConfig = {
+  bootstrap: [],
+  disableRefresh: true,
+  disableMetrics: true,
+  url: 'http://localhost',
+  appName: 'offline',
+  clientKey: 'not-used',
+};
+
 const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
   config,
   children,
   unleashClient,
   startClient = true,
 }) => {
-  const client = React.useRef<UnleashClient| null>(null);
+  const client = React.useRef<UnleashClient>(
+    unleashClient || new UnleashClient(config || offlineConfig)
+  );
   const [flagsReady, setFlagsReady] = React.useState(false);
   const [flagsError, setFlagsError] = React.useState(null);
   const flagsErrorRef = React.useRef(null);
@@ -28,10 +39,6 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
         If you are initializing the client in useEffect, you can avoid this warning
         by checking if the client exists before rendering.`
       );
-    }
-
-    if (!client.current) {
-      client.current = unleashClient || new UnleashClient(config);
     }
 
     const errorCallback = (e: any) => {
