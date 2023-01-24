@@ -118,6 +118,7 @@ const MyComponent = ({ userId }) => {
     updateContext({ userId });
   }, [userId]);
 
+  // OR if you need to perform an action right after new context is applied
   useEffect(() => {
     async function run() {
       // Can wait for the new flags to pull in from the different context
@@ -277,8 +278,8 @@ const config = {
 };
 ```
 
-
 # Migration guide
+
 ## Upgrade path from v1 -> v2
 
 If you were previously using the built in Async storage used in the unleash-proxy-client-js, this no longer comes bundled with the library. You will need to install the storage adapter for your preferred storage solution. Otherwise there are no breaking changes.

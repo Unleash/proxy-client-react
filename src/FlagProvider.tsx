@@ -10,49 +10,52 @@ export interface IFlagProvider {
   startClient?: boolean;
 }
 
+const offlineConfig = {
+  bootstrap: [],
+  disableRefresh: true,
+  disableMetrics: true,
+  url: 'http://localhost',
+  appName: 'offline',
+  clientKey: 'not-used',
+};
+
 const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
   config,
   children,
   unleashClient,
   startClient = true,
 }) => {
-  const client = React.useRef<UnleashClient>(unleashClient);
+  const client = React.useRef<UnleashClient>(
+    unleashClient || new UnleashClient(config || offlineConfig)
+  );
   const [flagsReady, setFlagsReady] = React.useState(false);
   const [flagsError, setFlagsError] = React.useState(null);
   const flagsErrorRef = React.useRef(null);
-  const callbackRegisteredRef = React.useRef(null);
-
-  if (!config && !unleashClient) {
-    console.warn(
-      `You must provide either a config or an unleash client to the flag provider. If you are initializing the client in useEffect, you can avoid this warning by
-      checking if the client exists before rendering.`
-    );
-  }
-
-  if (!client.current) {
-    client.current = new UnleashClient(config);
-  }
-
-  const errorCallback = (e: any) => {
-    // Use a ref because regular event handlers are closing over state
-    // with stale values:
-    flagsErrorRef.current = e;
-
-    if (flagsErrorRef.current === null) {
-      setFlagsError(e);
-    }
-  };
-  const readyCallback = () => {
-    setFlagsReady(true);
-  };
-
-  if (!callbackRegisteredRef.current) {
-    client.current.on('ready', readyCallback);
-    client.current.on('error', errorCallback);
-    callbackRegisteredRef.current = 'set';
-  }
 
   React.useEffect(() => {
+    if (!config && !unleashClient) {
+      console.error(
+        `You must provide either a config or an unleash client to the flag provider.
+        If you are initializing the client in useEffect, you can avoid this warning
+        by checking if the client exists before rendering.`
+      );
+    }
+
+    const errorCallback = (e: any) => {
+      // Use a ref because regular event handlers are closing over state with stale values:
+      flagsErrorRef.current = e;
+
+      if (flagsErrorRef.current === null) {
+        setFlagsError(e);
+      }
+    };
+    const readyCallback = () => {
+      setFlagsReady(true);
+    };
+
+    client.current.on('ready', readyCallback);
+    client.current.on('error', errorCallback);
+
     const shouldStartClient = startClient || !unleashClient;
     if (shouldStartClient) {
       // defensively stop the client first
