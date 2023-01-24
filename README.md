@@ -8,6 +8,8 @@ yarn add @unleash/proxy-client-react unleash-proxy-client
 
 # How to use
 
+## Initialize the client
+
 Prepare [Unleash Proxy](https://docs.getunleash.io/reference/unleash-proxy) secret
 or [Frontend API Access](https://docs.getunleash.io/reference/front-end-api) token.
 
@@ -18,8 +20,8 @@ import { createRoot } from 'react-dom/client';
 import { FlagProvider } from '@unleash/proxy-client-react';
 
 const config = {
-  url: 'https://HOSTNAME/proxy', // Your proxy's URL or the Unleash front-end API endpoint (<unleash-url>/api/frontend)
-  clientKey: 'PROXYKEY', // One of your proxy's designated client keys (also known as proxy secrets)
+  url: '<unleash-url>/api/frontend', // Your front-end API URL or the Unleash proxy's URL (https://<proxy-url>/proxy)
+  clientKey: '<your-token>', // A client-side API token OR one of your proxy's designated client keys (previously known as proxy secrets)
   refreshInterval: 15, // How often (in seconds) the client should poll the proxy for updates
   appName: 'your-app-name', // The name of your application. It's only used for identifying your application
 };
@@ -34,6 +36,13 @@ root.render(
   </React.StrictMode>
 );
 ```
+
+
+### Connection options
+
+To connect this SDK to your Unleash instance's [front-end API](https://docs.getunleash.io/reference/front-end-api), use the URL to your Unleash instance's front-end API (`<unleash-url>/api/frontend`) as the `url` parameter. For the `clientKey` parameter, use a `FRONTEND` token generated from your Unleash instance. Refer to the [_how to create API tokens_](https://docs.getunleash.io/how-to/how-to-create-api-tokens) guide for the necessary steps.
+
+To connect this SDK to the [Unleash proxy](https://docs.getunleash.io/reference/unleash-proxy), use the proxy's URL and a [proxy client key](https://docs.getunleash.io/reference/api-tokens-and-client-keys#proxy-client-keys). The [_configuration_ section of the Unleash proxy docs](https://docs.getunleash.io/reference/unleash-proxy#configuration) contains more info on how to configure client keys for your proxy.
 
 ## Check feature toggle status
 
