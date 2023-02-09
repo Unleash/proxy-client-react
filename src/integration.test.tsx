@@ -3,7 +3,7 @@
  * @jest-environment jsdom
  */
 
-import React from 'react';
+import React, { useContext } from 'react';
 import { render, screen } from '@testing-library/react';
 import { EVENTS, UnleashClient } from 'unleash-proxy-client';
 import '@testing-library/jest-dom';
@@ -13,31 +13,32 @@ import useFlagsStatus from './useFlagsStatus';
 import { act } from 'react-dom/test-utils';
 import useFlag from './useFlag';
 import useVariant from './useVariant';
+import FlagContext from './FlagContext';
+
+const fetchMock = jest.fn(() => {
+  return Promise.resolve({
+    ok: true,
+    status: 200,
+    headers: new Headers({}),
+    json: () => {
+      return Promise.resolve({
+        toggles: [
+          {
+            name: 'test-flag',
+            enabled: true,
+            variant: {
+              name: 'A',
+              payload: { type: 'string', value: 'A' },
+              enabled: true,
+            },
+          },
+        ],
+      });
+    },
+  });
+});
 
 test('should render toggles', async () => {
-  const fetchMock = jest.fn(() => {
-    return Promise.resolve({
-      ok: true,
-      status: 200,
-      headers: new Headers({}),
-      json: () => {
-        return Promise.resolve({
-          toggles: [
-            {
-              name: 'test-flag',
-              enabled: true,
-              variant: {
-                name: 'A',
-                payload: { type: 'string', value: 'A' },
-                enabled: true,
-              },
-            },
-          ],
-        });
-      },
-    });
-  });
-
   const client = new UnleashClient({
     url: 'http://localhost:4242/api/frontend',
     appName: 'test',
@@ -77,7 +78,9 @@ test('should render toggles', async () => {
   await act(
     () =>
       new Promise((resolve) => {
-        client.on(EVENTS.READY, resolve);
+        client.on(EVENTS.READY, () => {
+          setTimeout(resolve, 200);
+        });
       })
   );
 
@@ -89,4 +92,80 @@ test('should render toggles', async () => {
   expect(screen.getByTestId('variant')).toHaveTextContent(
     '{"name":"A","payload":{"type":"string","value":"A"},"enabled":true}'
   );
+});
+
+test('should be ready from the start if bootstrapped', () => {
+  jest.clearAllMocks();
+
+  const Component = React.memo(() => {
+    const { flagsReady } = useContext(FlagContext);
+
+    return <>{flagsReady ? 'ready' : ''}</>;
+  });
+
+  render(
+    <FlagProvider
+      config={{
+        url: 'http://localhost:4242/api/frontend',
+        appName: 'test',
+        clientKey: 'test',
+        bootstrap: [
+          {
+            name: 'test',
+            enabled: true,
+            variant: {
+              name: 'A',
+              enabled: true,
+              payload: { type: 'string', value: 'A' },
+            },
+            impressionData: false,
+          },
+        ],
+        fetch: fetchMock,
+      }}
+      startClient={false}
+    >
+      <Component />
+    </FlagProvider>
+  );
+
+  expect(screen.getByText('ready')).toBeInTheDocument();
+});
+
+test('should immediately return value if boostrapped', () => {
+  jest.clearAllMocks();
+
+  const Component = React.memo(() => {
+    const enabled = useFlag('test');
+
+    return <>{enabled ? 'enabled' : ''}</>;
+  });
+
+  render(
+    <FlagProvider
+      config={{
+        url: 'http://localhost:4242/api/frontend',
+        appName: 'test',
+        clientKey: 'test',
+        bootstrap: [
+          {
+            name: 'test',
+            enabled: true,
+            variant: {
+              name: 'A',
+              enabled: true,
+              payload: { type: 'string', value: 'A' },
+            },
+            impressionData: false,
+          },
+        ],
+        fetch: fetchMock,
+      }}
+      startClient={false}
+    >
+      <Component />
+    </FlagProvider>
+  );
+
+  expect(screen.getByText('enabled')).toBeInTheDocument();
 });

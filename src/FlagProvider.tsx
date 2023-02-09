@@ -28,7 +28,9 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
   const client = React.useRef<UnleashClient>(
     unleashClient || new UnleashClient(config || offlineConfig)
   );
-  const [flagsReady, setFlagsReady] = React.useState(false);
+  const [flagsReady, setFlagsReady] = React.useState(
+    client.current.bootstrapped
+  );
   const [flagsError, setFlagsError] = React.useState(null);
   const flagsErrorRef = React.useRef(null);
 
@@ -49,8 +51,13 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
         setFlagsError(e);
       }
     };
+
+    let timeout: any;
     const readyCallback = () => {
-      setFlagsReady(true);
+      // wait for flags to resolve after useFlag gets the same event
+      timeout = setTimeout(() => {
+        setFlagsReady(true);
+      }, 10);
     };
 
     client.current.on('ready', readyCallback);
@@ -70,6 +77,9 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
         client.current.off('error', errorCallback);
         client.current.off('ready', readyCallback);
         client.current.stop();
+      }
+      if (timeout) {
+        clearTimeout(timeout);
       }
     };
   }, []);
