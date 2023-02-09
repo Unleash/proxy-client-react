@@ -4,7 +4,7 @@
  */
 
 import React, { useContext } from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { EVENTS, UnleashClient } from 'unleash-proxy-client';
 import '@testing-library/jest-dom';
 
@@ -79,7 +79,7 @@ test('should render toggles', async () => {
     () =>
       new Promise((resolve) => {
         client.on(EVENTS.READY, () => {
-          setTimeout(resolve, 200);
+          setTimeout(resolve, 1);
         });
       })
   );
@@ -95,8 +95,6 @@ test('should render toggles', async () => {
 });
 
 test('should be ready from the start if bootstrapped', () => {
-  jest.clearAllMocks();
-
   const Component = React.memo(() => {
     const { flagsReady } = useContext(FlagContext);
 
@@ -133,13 +131,11 @@ test('should be ready from the start if bootstrapped', () => {
 });
 
 test('should immediately return value if boostrapped', () => {
-  jest.clearAllMocks();
-
-  const Component = React.memo(() => {
-    const enabled = useFlag('test');
+  const Component = () => {
+    const enabled = useFlag('test-flag');
 
     return <>{enabled ? 'enabled' : ''}</>;
-  });
+  };
 
   render(
     <FlagProvider
@@ -149,7 +145,7 @@ test('should immediately return value if boostrapped', () => {
         clientKey: 'test',
         bootstrap: [
           {
-            name: 'test',
+            name: 'test-flag',
             enabled: true,
             variant: {
               name: 'A',
@@ -167,5 +163,109 @@ test('should immediately return value if boostrapped', () => {
     </FlagProvider>
   );
 
-  expect(screen.getByText('enabled')).toBeInTheDocument();
+  expect(screen.queryByText('enabled')).toBeInTheDocument();
+});
+
+test('should render limited times when bootstrapped', async () => {
+  let renders = 0;
+  const config = {
+    url: 'http://localhost:4242/api/frontend',
+    appName: 'test',
+    clientKey: 'test',
+    bootstrap: [
+      {
+        name: 'test-flag',
+        enabled: true,
+        variant: {
+          name: 'A',
+          enabled: true,
+          payload: { type: 'string', value: 'A' },
+        },
+        impressionData: false,
+      },
+    ],
+    fetch: fetchMock,
+  };
+  const client = new UnleashClient(config);
+
+  const Component = () => {
+    const enabled = useFlag('test-flag');
+    const { flagsReady } = useContext(FlagContext);
+
+    renders += 1;
+
+    return (
+      <>
+        <span>{flagsReady ? 'flagsReady' : ''}</span>
+        <span>{enabled ? 'enabled' : ''}</span>
+      </>
+    );
+  };
+
+  render(
+    <FlagProvider unleashClient={client} config={config}>
+      <Component />
+    </FlagProvider>
+  );
+
+  expect(screen.queryByText('enabled')).toBeInTheDocument();
+  expect(screen.queryByText('flagsReady')).toBeInTheDocument();
+  expect(renders).toBe(1);
+
+  // Wait for client initialization
+  await act(
+    () =>
+      new Promise((resolve) => {
+        client.on(EVENTS.READY, () => {
+          setTimeout(resolve, 1);
+        });
+      })
+  );
+
+  expect(renders).toBe(1);
+});
+
+test('should resolve values before setting flagsReady', async () => {
+  const client = new UnleashClient({
+    url: 'http://localhost:4242/api/frontend',
+    appName: 'test',
+    clientKey: 'test',
+    fetch: fetchMock,
+  });
+  let renders = 0;
+
+  const Component = () => {
+    const enabled = useFlag('test-flag');
+    const { flagsReady } = useContext(FlagContext);
+
+    renders += 1;
+
+    return (
+      <>
+        <span>{flagsReady ? 'flagsReady' : ''}</span>
+        <span>{enabled ? 'enabled' : ''}</span>
+      </>
+    );
+  };
+
+  const ui = (
+    <FlagProvider unleashClient={client}>
+      <Component />
+    </FlagProvider>
+  );
+
+  render(ui);
+  expect(renders).toBe(1);
+  expect(screen.queryByText('flagsReady')).not.toBeInTheDocument();
+  expect(screen.queryByText('enabled')).not.toBeInTheDocument();
+  await waitFor(() =>
+    expect(screen.queryByText('enabled')).toBeInTheDocument()
+  );
+  expect(screen.queryByText('flagsReady')).toBeNull();
+  expect(renders).toBe(2);
+  await waitFor(() =>
+    expect(screen.queryByText('flagsReady')).toBeInTheDocument()
+  );
+  expect(screen.queryByText('enabled')).toBeInTheDocument();
+  expect(renders).toBe(3);
 });
