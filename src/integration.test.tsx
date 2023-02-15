@@ -3,8 +3,8 @@
  * @jest-environment jsdom
  */
 
-import React from 'react';
-import { render, screen } from '@testing-library/react';
+import React, { useContext } from 'react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { EVENTS, UnleashClient } from 'unleash-proxy-client';
 import '@testing-library/jest-dom';
 
@@ -13,31 +13,32 @@ import useFlagsStatus from './useFlagsStatus';
 import { act } from 'react-dom/test-utils';
 import useFlag from './useFlag';
 import useVariant from './useVariant';
+import FlagContext from './FlagContext';
+
+const fetchMock = jest.fn(() => {
+  return Promise.resolve({
+    ok: true,
+    status: 200,
+    headers: new Headers({}),
+    json: () => {
+      return Promise.resolve({
+        toggles: [
+          {
+            name: 'test-flag',
+            enabled: true,
+            variant: {
+              name: 'A',
+              payload: { type: 'string', value: 'A' },
+              enabled: true,
+            },
+          },
+        ],
+      });
+    },
+  });
+});
 
 test('should render toggles', async () => {
-  const fetchMock = jest.fn(() => {
-    return Promise.resolve({
-      ok: true,
-      status: 200,
-      headers: new Headers({}),
-      json: () => {
-        return Promise.resolve({
-          toggles: [
-            {
-              name: 'test-flag',
-              enabled: true,
-              variant: {
-                name: 'A',
-                payload: { type: 'string', value: 'A' },
-                enabled: true,
-              },
-            },
-          ],
-        });
-      },
-    });
-  });
-
   const client = new UnleashClient({
     url: 'http://localhost:4242/api/frontend',
     appName: 'test',
@@ -77,7 +78,9 @@ test('should render toggles', async () => {
   await act(
     () =>
       new Promise((resolve) => {
-        client.on(EVENTS.READY, resolve);
+        client.on(EVENTS.READY, () => {
+          setTimeout(resolve, 1);
+        });
       })
   );
 
@@ -89,4 +92,180 @@ test('should render toggles', async () => {
   expect(screen.getByTestId('variant')).toHaveTextContent(
     '{"name":"A","payload":{"type":"string","value":"A"},"enabled":true}'
   );
+});
+
+test('should be ready from the start if bootstrapped', () => {
+  const Component = React.memo(() => {
+    const { flagsReady } = useContext(FlagContext);
+
+    return <>{flagsReady ? 'ready' : ''}</>;
+  });
+
+  render(
+    <FlagProvider
+      config={{
+        url: 'http://localhost:4242/api/frontend',
+        appName: 'test',
+        clientKey: 'test',
+        bootstrap: [
+          {
+            name: 'test',
+            enabled: true,
+            variant: {
+              name: 'A',
+              enabled: true,
+              payload: { type: 'string', value: 'A' },
+            },
+            impressionData: false,
+          },
+        ],
+        fetch: fetchMock,
+      }}
+      startClient={false}
+    >
+      <Component />
+    </FlagProvider>
+  );
+
+  expect(screen.getByText('ready')).toBeInTheDocument();
+});
+
+test('should immediately return value if boostrapped', () => {
+  const Component = () => {
+    const enabled = useFlag('test-flag');
+
+    return <>{enabled ? 'enabled' : ''}</>;
+  };
+
+  render(
+    <FlagProvider
+      config={{
+        url: 'http://localhost:4242/api/frontend',
+        appName: 'test',
+        clientKey: 'test',
+        bootstrap: [
+          {
+            name: 'test-flag',
+            enabled: true,
+            variant: {
+              name: 'A',
+              enabled: true,
+              payload: { type: 'string', value: 'A' },
+            },
+            impressionData: false,
+          },
+        ],
+        fetch: fetchMock,
+      }}
+      startClient={false}
+    >
+      <Component />
+    </FlagProvider>
+  );
+
+  expect(screen.queryByText('enabled')).toBeInTheDocument();
+});
+
+test('should render limited times when bootstrapped', async () => {
+  let renders = 0;
+  const config = {
+    url: 'http://localhost:4242/api/frontend',
+    appName: 'test',
+    clientKey: 'test',
+    bootstrap: [
+      {
+        name: 'test-flag',
+        enabled: true,
+        variant: {
+          name: 'A',
+          enabled: true,
+          payload: { type: 'string', value: 'A' },
+        },
+        impressionData: false,
+      },
+    ],
+    fetch: fetchMock,
+  };
+  const client = new UnleashClient(config);
+
+  const Component = () => {
+    const enabled = useFlag('test-flag');
+    const { flagsReady } = useContext(FlagContext);
+
+    renders += 1;
+
+    return (
+      <>
+        <span>{flagsReady ? 'flagsReady' : ''}</span>
+        <span>{enabled ? 'enabled' : ''}</span>
+      </>
+    );
+  };
+
+  render(
+    <FlagProvider unleashClient={client} config={config}>
+      <Component />
+    </FlagProvider>
+  );
+
+  expect(screen.queryByText('enabled')).toBeInTheDocument();
+  expect(screen.queryByText('flagsReady')).toBeInTheDocument();
+  expect(renders).toBe(1);
+
+  // Wait for client initialization
+  await act(
+    () =>
+      new Promise((resolve) => {
+        client.on(EVENTS.READY, () => {
+          setTimeout(resolve, 1);
+        });
+      })
+  );
+
+  expect(renders).toBe(1);
+});
+
+test('should resolve values before setting flagsReady', async () => {
+  const client = new UnleashClient({
+    url: 'http://localhost:4242/api/frontend',
+    appName: 'test',
+    clientKey: 'test',
+    fetch: fetchMock,
+  });
+  let renders = 0;
+
+  const Component = () => {
+    const enabled = useFlag('test-flag');
+    const { flagsReady } = useContext(FlagContext);
+
+    renders += 1;
+
+    return (
+      <>
+        <span>{flagsReady ? 'flagsReady' : ''}</span>
+        <span>{enabled ? 'enabled' : ''}</span>
+      </>
+    );
+  };
+
+  const ui = (
+    <FlagProvider unleashClient={client}>
+      <Component />
+    </FlagProvider>
+  );
+
+  render(ui);
+  expect(renders).toBe(1);
+  expect(screen.queryByText('flagsReady')).not.toBeInTheDocument();
+  expect(screen.queryByText('enabled')).not.toBeInTheDocument();
+  await waitFor(() =>
+    expect(screen.queryByText('enabled')).toBeInTheDocument()
+  );
+  expect(screen.queryByText('flagsReady')).toBeNull();
+  expect(renders).toBe(2);
+  await waitFor(() =>
+    expect(screen.queryByText('flagsReady')).toBeInTheDocument()
+  );
+  expect(screen.queryByText('enabled')).toBeInTheDocument();
+  expect(renders).toBe(3);
 });

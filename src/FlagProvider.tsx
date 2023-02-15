@@ -10,7 +10,7 @@ export interface IFlagProvider {
   startClient?: boolean;
 }
 
-const offlineConfig = {
+const offlineConfig: IConfig = {
   bootstrap: [],
   disableRefresh: true,
   disableMetrics: true,
@@ -20,15 +20,22 @@ const offlineConfig = {
 };
 
 const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
-  config,
+  config: customConfig,
   children,
   unleashClient,
   startClient = true,
 }) => {
+  const config = customConfig || offlineConfig;
   const client = React.useRef<UnleashClient>(
-    unleashClient || new UnleashClient(config || offlineConfig)
+    unleashClient || new UnleashClient(config)
   );
-  const [flagsReady, setFlagsReady] = React.useState(false);
+  const [flagsReady, setFlagsReady] = React.useState(
+    Boolean(
+      unleashClient
+        ? customConfig?.bootstrap && customConfig?.bootstrapOverride !== false
+        : config.bootstrap && config.bootstrapOverride !== false
+    )
+  );
   const [flagsError, setFlagsError] = React.useState(null);
   const flagsErrorRef = React.useRef(null);
 
@@ -49,8 +56,13 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
         setFlagsError(e);
       }
     };
+
+    let timeout: any;
     const readyCallback = () => {
-      setFlagsReady(true);
+      // wait for flags to resolve after useFlag gets the same event
+      timeout = setTimeout(() => {
+        setFlagsReady(true);
+      }, 0);
     };
 
     client.current.on('ready', readyCallback);
@@ -70,6 +82,9 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
         client.current.off('error', errorCallback);
         client.current.off('ready', readyCallback);
         client.current.stop();
+      }
+      if (timeout) {
+        clearTimeout(timeout);
       }
     };
   }, []);
