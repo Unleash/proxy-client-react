@@ -18,7 +18,7 @@
     "build-watch": "webpack --watch",
     "prepare": "yarn run build",
     "test": "jest --watch",
-    "test:ci": "CI=true jest --watch=false --watchAll=false --coverage --ci --reporters=default"
+    "test:ci": "CI=true jest --watch=false --watchAll=false --coverage --ci --reporters=default --collectCoverageFrom=src/**/*"
   },
   "keywords": [],
   "author": "",
