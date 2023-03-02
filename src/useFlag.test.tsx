@@ -7,10 +7,13 @@ const useContextSpy = jest.spyOn(React, 'useContext');
 const givenFlagName: string = 'Test';
 const clientMock: any = {
   on: jest.fn(),
+  off: jest.fn(),
 }
 
 beforeEach(() => {
   isEnabledMock.mockClear();
+  clientMock.on.mockClear();
+  clientMock.off.mockClear();
 })
 
 test('should return false when the flag is NOT enabled in context', () => {
@@ -87,7 +90,6 @@ test('should set the local state only once', () => {
 });
 
 test('should NOT subscribe to ready or update if client does NOT exist', () => {
-  clientMock.on.mockClear()
   isEnabledMock.mockReturnValueOnce(false);
   useContextSpy.mockReturnValue({ client: undefined, isEnabled: isEnabledMock });
   clientMock.on.mockImplementation((eventName: string, cb: Function) => {
@@ -102,4 +104,16 @@ test('should NOT subscribe to ready or update if client does NOT exist', () => {
   expect(clientMock.on).not.toHaveBeenCalled()
   expect(clientMock.on).not.toHaveBeenCalled()
   expect(isEnabledMock).toHaveBeenCalledTimes(1);
+});
+
+test('should remove event listeners when unmounted', () => {
+  useContextSpy.mockReturnValue({ client: clientMock, isEnabled: isEnabledMock });
+
+  const { unmount } = renderHook(() => useFlag(givenFlagName));
+
+  unmount();
+
+  expect(clientMock.off).toHaveBeenCalledTimes(2);
+  expect(clientMock.off).nthCalledWith(1, ...clientMock.on.mock.calls[0]);
+  expect(clientMock.off).nthCalledWith(2, ...clientMock.on.mock.calls[1]);
 });
