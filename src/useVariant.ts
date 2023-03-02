@@ -36,7 +36,7 @@ const useVariant = (name: string): Partial<IVariant> => {
     client.on('update', updateHandler);
     client.on('ready', readyHandler);
 
-    () => {
+    return () => {
       client.off('update', updateHandler);
       client.off('ready', readyHandler);
     };
