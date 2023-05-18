@@ -37,7 +37,6 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
     )
   );
   const [flagsError, setFlagsError] = React.useState(null);
-  const flagsErrorRef = React.useRef(null);
 
   React.useEffect(() => {
     if (!config && !unleashClient) {
@@ -49,12 +48,7 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
     }
 
     const errorCallback = (e: any) => {
-      // Use a ref because regular event handlers are closing over state with stale values:
-      flagsErrorRef.current = e;
-
-      if (flagsErrorRef.current === null) {
-        setFlagsError(e);
-      }
+      setFlagsError(currentError => currentError || e);
     };
 
     let timeout: any;
