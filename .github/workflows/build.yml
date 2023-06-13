@@ -1,6 +1,6 @@
 # @format
 
-name: react-proxy-client CI
+name: Node.js CI
 
 on:
   push:
@@ -12,14 +12,20 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [16.x, 18.x, 20.x]
     steps:
       - uses: actions/checkout@v2
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Build
-        run: yarn && yarn build
-      - name: Run tests
+
+      - name: 📌 Install
+        run: yarn
+
+      - name: 🔨 Build
+        run: yarn build
+
+      - name: 🧪 Test
         run: yarn test:ci
