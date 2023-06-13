@@ -1,12 +1,13 @@
 import { renderHook } from '@testing-library/react-hooks/native';
-import React from 'react';
 import useUnleashContext from './useUnleashContext';
 
-const useContextSpy = jest.spyOn(React, 'useContext');
-const updateContextMock = jest.fn().mockName('updateContext');
+const updateContextMock = vi.fn().mockName('updateContext');
+vi.mock('react', async () => ({
+  ...((await vi.importActual('react')) as any),
+  useContext: vi.fn(() => ({ updateContext: updateContextMock })),
+}));
 
 test('should return the updateContext function from context', () => {
-  useContextSpy.mockReturnValue({ updateContext: updateContextMock });
   const { result } = renderHook(() => useUnleashContext());
 
   expect(result.current).toBe(updateContextMock);

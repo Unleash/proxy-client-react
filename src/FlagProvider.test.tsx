@@ -1,8 +1,3 @@
-/**
- * @format
- * @jest-environment jsdom
- */
-
 import React, { useContext, useEffect, useState } from 'react';
 import { render, screen, RenderOptions } from '@testing-library/react';
 import * as UnleashClientModule from 'unleash-proxy-client';
@@ -19,17 +14,14 @@ interface renderConsumerOptions {
   renderOptions: RenderOptions;
 }
 
-const getVariantMock = jest.fn().mockReturnValue('A');
-const updateContextMock = jest.fn();
-const startClientMock = jest.fn();
-const stopClientMock = jest.fn();
-const onMock = jest.fn().mockReturnValue('subscribed');
-const offMock = jest.fn();
-const isEnabledMock = jest.fn().mockReturnValue(true);
-const UnleashClientSpy: jest.SpyInstance = jest.spyOn(
-  UnleashClientModule,
-  'UnleashClient'
-);
+const getVariantMock = vi.fn().mockReturnValue('A');
+const updateContextMock = vi.fn();
+const startClientMock = vi.fn();
+const stopClientMock = vi.fn();
+const onMock = vi.fn().mockReturnValue('subscribed');
+const offMock = vi.fn();
+const isEnabledMock = vi.fn().mockReturnValue(true);
+const UnleashClientSpy = vi.spyOn(UnleashClientModule, 'UnleashClient');
 
 const givenConfig = {
   appName: 'my-app',
@@ -43,6 +35,7 @@ beforeEach(() => {
   onMock.mockClear();
 });
 
+// @ts-expect-error
 UnleashClientSpy.mockReturnValue({
   getVariant: getVariantMock,
   updateContext: updateContextMock,
@@ -199,7 +192,7 @@ test('A consumer should be able to get a variant when the client is passed into 
 });
 
 test('A memoized consumer should not rerender when the context provider values are the same', () => {
-  const renderCounter = jest.fn();
+  const renderCounter = vi.fn();
 
   const MemoizedConsumer = React.memo(() => {
     const { updateContext, isEnabled, getVariant, client, on } =
@@ -230,7 +223,8 @@ test('A memoized consumer should not rerender when the context provider values a
 });
 
 test('should update when ready event is sent', () => {
-  const localMock = jest.fn();
+  const localMock = vi.fn();
+  // @ts-expect-error
   UnleashClientSpy.mockReturnValue({
     getVariant: getVariantMock,
     updateContext: updateContextMock,
@@ -263,7 +257,8 @@ test('should update when ready event is sent', () => {
 });
 
 test('should register error when error event is sent', () => {
-  const localMock = jest.fn();
+  const localMock = vi.fn();
+  // @ts-expect-error
   UnleashClientSpy.mockReturnValue({
     getVariant: getVariantMock,
     updateContext: updateContextMock,
@@ -296,8 +291,9 @@ test('should register error when error event is sent', () => {
 });
 
 test('should not start client if startClient is false', () => {
-  const localMock = jest.fn();
-  const stopMock = jest.fn();
+  const localMock = vi.fn();
+  const stopMock = vi.fn();
+  // @ts-expect-error
   UnleashClientSpy.mockReturnValue({
     getVariant: getVariantMock,
     updateContext: updateContextMock,

@@ -1,13 +1,6 @@
-/**
- * @format
- * @jest-environment jsdom
- */
-
 import React, { useContext } from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { EVENTS, UnleashClient } from 'unleash-proxy-client';
-import '@testing-library/jest-dom';
-
 import FlagProvider from './FlagProvider';
 import useFlagsStatus from './useFlagsStatus';
 import { act } from 'react-dom/test-utils';
@@ -15,7 +8,7 @@ import useFlag from './useFlag';
 import useVariant from './useVariant';
 import FlagContext from './FlagContext';
 
-const fetchMock = jest.fn(() => {
+const fetchMock = vi.fn(async () => {
   return Promise.resolve({
     ok: true,
     status: 200,
@@ -258,14 +251,14 @@ test('should resolve values before setting flagsReady', async () => {
   expect(renders).toBe(1);
   expect(screen.queryByText('flagsReady')).not.toBeInTheDocument();
   expect(screen.queryByText('enabled')).not.toBeInTheDocument();
-  await waitFor(() =>
-    expect(screen.queryByText('enabled')).toBeInTheDocument()
-  );
-  expect(screen.queryByText('flagsReady')).toBeNull();
-  expect(renders).toBe(2);
-  await waitFor(() =>
-    expect(screen.queryByText('flagsReady')).toBeInTheDocument()
-  );
-  expect(screen.queryByText('enabled')).toBeInTheDocument();
-  expect(renders).toBe(3);
+  await waitFor(() => {
+    expect(screen.queryByText('enabled')).toBeInTheDocument();
+    expect(screen.queryByText('flagsReady')).toBeNull();
+    expect(renders).toBe(2);
+  });
+  await waitFor(() => {
+    expect(screen.queryByText('flagsReady')).toBeInTheDocument();
+    expect(screen.queryByText('enabled')).toBeInTheDocument();
+    expect(renders).toBe(3);
+  });
 });
