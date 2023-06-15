@@ -319,3 +319,44 @@ test('should not start client if startClient is false', () => {
   expect(localMock).not.toHaveBeenCalled();
   expect(stopMock).not.toHaveBeenCalled();
 });
+
+test('should provide error', () => {
+  // see: https://github.com/Unleash/proxy-client-react/pull/118
+
+  const onRender = vi.fn();
+
+  const on = (event: string, cb: (e: unknown) => {}) => {
+    if (event === EVENTS.ERROR) {
+      cb('Error!');
+    }
+  };
+
+  const mockClient = {
+    on: vi.fn(on),
+    stop: vi.fn(),
+    start: vi.fn(),
+    off: vi.fn(),
+    updateContext: vi.fn(),
+    isEnabled: vi.fn(),
+    getVariant: vi.fn(),
+  } as any as UnleashClientModule.UnleashClient;
+
+  const FlagConsumer = () => {
+    const { flagsError, flagsReady } = useContext(FlagContext);
+
+    onRender({ flagsReady, flagsError });
+
+    return <>{JSON.stringify(flagsError)}</>;
+  };
+
+  render(
+    <FlagProvider unleashClient={mockClient}>
+      <FlagConsumer />
+    </FlagProvider>
+  );
+
+  expect(onRender).toHaveBeenCalledWith({
+    flagsReady: false,
+    flagsError: 'Error!',
+  });
+});

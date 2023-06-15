@@ -48,7 +48,7 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
     }
 
     const errorCallback = (e: any) => {
-      setFlagsError(currentError => currentError || e);
+      setFlagsError((currentError) => currentError || e);
     };
 
     let timeout: any;
