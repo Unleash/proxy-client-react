@@ -108,7 +108,7 @@ Initial context can be specified on a `FlagProvider` `config.context` property.
 
 `<FlagProvider config={{ ...config, context: { userId: 123 }}>`
 
-Follow the steps below in order to update the unleash context dynamically:
+This code sample shows you how to update the unleash context dynamically:
 
 ```jsx
 import { useUnleashContext, useFlag } from '@unleash/proxy-client-react';
