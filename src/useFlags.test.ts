@@ -1,4 +1,4 @@
-import React from 'react';
+import { useContext } from 'react';
 import { renderHook } from '@testing-library/react-hooks/native';
 import useFlags from './useFlags';
 import type { IToggle } from 'unleash-proxy-client';
@@ -24,13 +24,18 @@ const toggles = [
     impressionData: false,
   },
 ];
+vi.mock('react', async () => ({
+  ...((await vi.importActual('react')) as any),
+  useContext: vi.fn(),
+}));
+
 test('should return flags', () => {
-  jest.spyOn(React, 'useContext').mockImplementation(() => ({
+  vi.mocked(useContext).mockReturnValue({
     client: {
       getAllToggles: () => toggles,
-      on: jest.fn(),
+      on: vi.fn(),
     },
-  }));
+  });
 
   const { result } = renderHook(() => useFlags());
   expect(result.current).toEqual(toggles);
@@ -39,15 +44,15 @@ test('should return flags', () => {
 test('should update flags on update event', async () => {
   const updatedToggles: IToggle[] = [];
   const client = {
-    getAllToggles: jest.fn(),
-    on: jest.fn(),
-    off: jest.fn(),
+    getAllToggles: vi.fn(),
+    on: vi.fn(),
+    off: vi.fn(),
   };
   client.getAllToggles.mockReturnValue(toggles);
 
-  jest.spyOn(React, 'useContext').mockImplementation(() => ({
+  vi.mocked(useContext).mockReturnValue({
     client,
-  }));
+  });
 
   const { result } = renderHook(() => useFlags());
   expect(result.current).toEqual(toggles);

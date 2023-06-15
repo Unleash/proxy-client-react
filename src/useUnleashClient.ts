@@ -1,5 +1,3 @@
-/** @format */
-
 import { useContext } from 'react';
 import FlagContext from './FlagContext';
 

@@ -1,5 +1,8 @@
 # Changelog
 
+> ---
+> ⚠️ Please use **GitHub Releases** to view current changelog.
+> ---
 
 ## 1.0.1
 - Merge pull request #17 from GabrielNastase/feat/async-update-context
