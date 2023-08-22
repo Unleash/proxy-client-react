@@ -49,11 +49,10 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
     }
 
     const errorCallback = (e: any) => {
-      // Use a ref because regular event handlers are closing over state with stale values:
-      flagsErrorRef.current = e;
-
       if (flagsErrorRef.current === null) {
         setFlagsError(e);
+        // Use a ref because regular event handlers are closing over state with stale values:
+        flagsErrorRef.current = e;
       }
     };
 
