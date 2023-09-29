@@ -159,62 +159,86 @@ test('should remove event listeners when unmounted', () => {
   expect(clientMock.off).nthCalledWith(2, ...clientMock.on.mock.calls[1]);
 });
 
-describe("Variant change detection", () => {
-    test("If the variants are identical, it returns `false`", () => {
-        const a = { name: 'a', enabled: true, payload: {
-            type: 'string',
-            value: 'data'
-        }}
-        const b = { name: 'a', enabled: true, payload: {
-            type: 'string',
-            value: 'data'
-        }}
+describe('Variant change detection', () => {
+    test('If the variants are identical, it returns `false`', () => {
+        const a = {
+            name: 'a',
+            enabled: true,
+            payload: {
+                type: 'string',
+                value: 'data',
+            },
+        };
+        const b = {
+            name: 'a',
+            enabled: true,
+            payload: {
+                type: 'string',
+                value: 'data',
+            },
+        };
 
-        expect(variantHasChanged(a, b)).toBeFalsy()
-    })
+        expect(variantHasChanged(a, b)).toBeFalsy();
+    });
 
     test('If the new variant is undefined, it counts as a change', () => {
-        const a = {name: 'a', enabled: true}
+        const a = { name: 'a', enabled: true };
 
-        expect(variantHasChanged(a, undefined)).toBeTruthy()
-});
+        expect(variantHasChanged(a, undefined)).toBeTruthy();
+    });
 
     test('Name change is detected', () => {
-        const a = {name: 'a', enabled: true}
-        const b = {name: 'b', enabled: true}
+        const a = { name: 'a', enabled: true };
+        const b = { name: 'b', enabled: true };
 
-        expect(variantHasChanged(a, b)).toBeTruthy()
-});
+        expect(variantHasChanged(a, b)).toBeTruthy();
+    });
 
-test('Enabled state change is detected', () => {
-        const enabled = {name: 'a', enabled: true}
-        const disabled = {name: 'a', enabled: false}
+    test('Enabled state change is detected', () => {
+        const enabled = { name: 'a', enabled: true };
+        const disabled = { name: 'a', enabled: false };
 
-        expect(variantHasChanged(enabled, disabled)).toBeTruthy()
-});
+        expect(variantHasChanged(enabled, disabled)).toBeTruthy();
+    });
     test('Payload type change is detected', () => {
-        const a = { name: 'a', enabled: true, payload: {
-            type: 'string',
-            value: '{}'
-        }}
-        const b = { name: 'a', enabled: true, payload: {
-            type: 'json',
-            value: '{}'
-        }}
+        const a = {
+            name: 'a',
+            enabled: true,
+            payload: {
+                type: 'string',
+                value: '{}',
+            },
+        };
+        const b = {
+            name: 'a',
+            enabled: true,
+            payload: {
+                type: 'json',
+                value: '{}',
+            },
+        };
 
-        expect(variantHasChanged(a, b)).toBeTruthy()
-});
+        expect(variantHasChanged(a, b)).toBeTruthy();
+    });
 
     test('Payload value change is detected', () => {
-        const a = { name: 'a', enabled: true, payload: {
-            type: 'string',
-            value: '1'
-        }}
-        const b = { name: 'a', enabled: true, payload: {
-            type: 'string',
-            value: '2'
-        }}
+        const a = {
+            name: 'a',
+            enabled: true,
+            payload: {
+                type: 'string',
+                value: '1',
+            },
+        };
+        const b = {
+            name: 'a',
+            enabled: true,
+            payload: {
+                type: 'string',
+                value: '2',
+            },
+        };
 
-        expect(variantHasChanged(a, b)).toBeTruthy()
+        expect(variantHasChanged(a, b)).toBeTruthy();
+    });
 });
-})
