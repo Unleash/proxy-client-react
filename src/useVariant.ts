@@ -2,6 +2,16 @@ import { useContext, useState, useEffect, useRef } from 'react';
 import { IVariant } from 'unleash-proxy-client';
 import FlagContext from './FlagContext';
 
+export const variantHasChanged = (oldVariant: IVariant, newVariant?: IVariant): boolean => {
+  const variantsAreEqual =
+    oldVariant.name === newVariant?.name &&
+    oldVariant.enabled === newVariant?.enabled &&
+    oldVariant.payload?.type === newVariant?.payload?.type &&
+    oldVariant.payload?.value === newVariant?.payload?.value
+
+   return !variantsAreEqual
+}
+
 const useVariant = (name: string): Partial<IVariant> => {
   const { getVariant, client } = useContext(FlagContext);
 
@@ -17,10 +27,7 @@ const useVariant = (name: string): Partial<IVariant> => {
 
     const updateHandler = () => {
       const newVariant = getVariant(name);
-      if (
-        variantRef.current.name !== newVariant?.name ||
-        variantRef.current.enabled !== newVariant?.enabled
-      ) {
+      if (variantHasChanged(variantRef.current, newVariant)) {
         setVariant(newVariant);
         variantRef.current = newVariant;
       }
