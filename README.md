@@ -299,3 +299,7 @@ Upgrading should be as easy as running yarn again with the new version, but we m
 ## Upgrade path from v3 -> v4
 
 `startClient` option has been simpilfied. Now it will also work if you don't pass custom client with it, and in SSR (when `typeof window === 'undefined'`) it defaults to `false`.
+
+
+##  Design philosophy
+This feature flag SDK is designed according to our design philosophy. You can [read more about that here](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices).
