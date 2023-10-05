@@ -302,7 +302,6 @@ Upgrading should be as easy as running yarn again with the new version, but we m
 
 #### Note on v4.0.0:
 The major release is driven by Node14 end of life and represents no other changes.  From this version onwards we do not guarantee that this library will work server side with Node 14.
-No other 
 
 ##  Design philosophy
 This feature flag SDK is designed according to our design philosophy. You can [read more about that here](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices).
