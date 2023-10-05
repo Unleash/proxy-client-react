@@ -5,6 +5,7 @@
   "type": "module",
   "main": "./dist/unleash-react.umd.js",
   "module": "./dist/unleash-react.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/unleash-react.js",
