@@ -300,6 +300,9 @@ Upgrading should be as easy as running yarn again with the new version, but we m
 
 `startClient` option has been simpilfied. Now it will also work if you don't pass custom client with it, and in SSR (when `typeof window === 'undefined'`) it defaults to `false`.
 
+#### Note on v4.0.0:
+The major release is driven by Node14 end of life and represents no other changes.  From this version onwards we do not guarantee that this library will work server side with Node 14.
+No other 
 
 ##  Design philosophy
 This feature flag SDK is designed according to our design philosophy. You can [read more about that here](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices).
