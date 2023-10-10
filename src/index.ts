@@ -9,7 +9,7 @@ export type {
 } from 'unleash-proxy-client';
 export {
   UnleashClient,
-  IStorageProvider,
+  type IStorageProvider,
   LocalStorageProvider,
   InMemoryStorageProvider,
 } from 'unleash-proxy-client';
