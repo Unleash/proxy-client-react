@@ -1,6 +1,6 @@
 {
   "name": "@unleash/proxy-client-react",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "React interface for working with unleash",
   "type": "module",
   "main": "./dist/unleash-react.umd.cjs",
@@ -31,7 +31,11 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "keywords": ["unleash", "react", "feature-toggles"],
+  "keywords": [
+    "unleash",
+    "react",
+    "feature-toggles"
+  ],
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
