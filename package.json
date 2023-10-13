@@ -3,17 +3,17 @@
   "version": "4.0.2",
   "description": "React interface for working with unleash",
   "type": "module",
-  "main": "./dist/unleash-react.umd.js",
+  "main": "./dist/unleash-react.umd.cjs",
   "module": "./dist/unleash-react.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/unleash-react.js",
-      "require": "./dist/unleash-react.umd.js",
+      "require": "./dist/unleash-react.umd.cjs",
       "types": "./dist/index.d.ts"
     }
   },
-  "browser": "./dist/unleash-react.umd.js",
+  "browser": "./dist/unleash-react.umd.cjs",
   "files": [
     "dist",
     "LICENCE.txt"
@@ -31,7 +31,7 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "keywords": [],
+  "keywords": ["unleash", "react", "feature-toggles"],
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
