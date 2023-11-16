@@ -19,6 +19,11 @@ const offlineConfig: IConfig = {
   clientKey: 'not-used',
 };
 
+// save startTransition as var to avoid webpack analysis (https://github.com/webpack/webpack/issues/14814)
+const _startTransition = 'startTransition';
+// fallback for React <18 which doesn't support startTransition
+const startTransition = React[_startTransition] || (fn => fn());
+
 const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
   config: customConfig,
   children,
@@ -48,7 +53,7 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
     }
 
     const errorCallback = (e: any) => {
-      React.startTransition(() => {
+      startTransition(() => {
         setFlagsError(currentError => currentError || e);
       });
     };
@@ -57,7 +62,7 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
     const readyCallback = () => {
       // wait for flags to resolve after useFlag gets the same event
       timeout = setTimeout(() => {
-        React.startTransition(() => {
+        startTransition(() => {
           setFlagsReady(true);
         });
       }, 0);
