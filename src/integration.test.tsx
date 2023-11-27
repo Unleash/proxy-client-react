@@ -83,7 +83,7 @@ test('should render toggles', async () => {
   expect(screen.getByTestId('ready')).toHaveTextContent('true');
   expect(screen.getByTestId('state')).toHaveTextContent('true');
   expect(screen.getByTestId('variant')).toHaveTextContent(
-    '{"name":"A","payload":{"type":"string","value":"A"},"enabled":true}'
+    '{"name":"A","payload":{"type":"string","value":"A"},"enabled":true,"feature_enabled":true}'
   );
 });
 

@@ -9,6 +9,7 @@ export const variantHasChanged = (
     const variantsAreEqual =
         oldVariant.name === newVariant?.name &&
         oldVariant.enabled === newVariant?.enabled &&
+        oldVariant.feature_enabled === newVariant?.feature_enabled &&
         oldVariant.payload?.type === newVariant?.payload?.type &&
         oldVariant.payload?.value === newVariant?.payload?.value;
 
