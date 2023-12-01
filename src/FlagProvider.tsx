@@ -58,6 +58,12 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
       });
     };
 
+    const clearErrorCallback = (e: any) => {
+      startTransition(() => {
+        setFlagsError(null);
+      });
+    } 
+
     let timeout: any;
     const readyCallback = () => {
       // wait for flags to resolve after useFlag gets the same event
@@ -70,6 +76,7 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
 
     client.current.on('ready', readyCallback);
     client.current.on('error', errorCallback);
+    client.current.on('recovered', clearErrorCallback);
 
     const shouldStartClient = startClient || !unleashClient;
     if (shouldStartClient) {
@@ -84,6 +91,7 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
       if (client.current) {
         client.current.off('error', errorCallback);
         client.current.off('ready', readyCallback);
+        client.current.off('recovered', clearErrorCallback)
         client.current.stop();
       }
       if (timeout) {
