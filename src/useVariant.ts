@@ -16,10 +16,10 @@ export const variantHasChanged = (
     return !variantsAreEqual;
 };
 
-const useVariant = (name: string): Partial<IVariant> => {
+const useVariant = (featureName: string): Partial<IVariant> => {
   const { getVariant, client } = useContext(FlagContext);
 
-  const [variant, setVariant] = useState(getVariant(name));
+  const [variant, setVariant] = useState(getVariant(featureName));
   const variantRef = useRef<typeof variant>({
     name: variant.name,
     enabled: variant.enabled,
@@ -30,7 +30,7 @@ const useVariant = (name: string): Partial<IVariant> => {
     if (!client) return;
 
     const updateHandler = () => {
-      const newVariant = getVariant(name);
+      const newVariant = getVariant(featureName);
       if (variantHasChanged(variantRef.current, newVariant)) {
         setVariant(newVariant);
         variantRef.current = newVariant;
@@ -38,7 +38,7 @@ const useVariant = (name: string): Partial<IVariant> => {
     };
 
     const readyHandler = () => {
-      const variant = getVariant(name);
+      const variant = getVariant(featureName);
       variantRef.current.name = variant?.name;
       variantRef.current.enabled = variant?.enabled;
       setVariant(variant);

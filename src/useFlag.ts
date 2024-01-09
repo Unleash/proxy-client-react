@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState, useRef } from 'react';
 import FlagContext from './FlagContext';
 
-const useFlag = (name: string) => {
+const useFlag = (featureName: string) => {
   const { isEnabled, client } = useContext(FlagContext);
-  const [flag, setFlag] = useState(!!isEnabled(name));
+  const [flag, setFlag] = useState(!!isEnabled(featureName));
   const flagRef = useRef<typeof flag>();
   flagRef.current = flag;
 
@@ -11,7 +11,7 @@ const useFlag = (name: string) => {
     if (!client) return;
 
     const updateHandler = () => {
-      const enabled = isEnabled(name);
+      const enabled = isEnabled(featureName);
       if (enabled !== flagRef.current) {
         flagRef.current = enabled;
         setFlag(!!enabled);
@@ -19,7 +19,7 @@ const useFlag = (name: string) => {
     };
 
     const readyHandler = () => {
-      const enabled = isEnabled(name);
+      const enabled = isEnabled(featureName);
       flagRef.current = enabled;
       setFlag(enabled);
     };
