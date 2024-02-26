@@ -64,7 +64,7 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
       });
     } 
 
-    let timeout: any; 
+    let timeout: any;
     const readyCallback = () => {
       // wait for flags to resolve after useFlag gets the same event
       timeout = setTimeout(() => {
