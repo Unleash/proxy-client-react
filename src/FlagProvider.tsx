@@ -64,7 +64,7 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
       });
     } 
 
-    let timeout: any;
+    let timeout: any; 
     const readyCallback = () => {
       // wait for flags to resolve after useFlag gets the same event
       timeout = setTimeout(() => {
@@ -78,8 +78,7 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
     client.current.on('error', errorCallback);
     client.current.on('recovered', clearErrorCallback);
 
-    const shouldStartClient = startClient || !unleashClient;
-    if (shouldStartClient) {
+    if (startClient) {
       // defensively stop the client first
       client.current.stop();
       // start the client
