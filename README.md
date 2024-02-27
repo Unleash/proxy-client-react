@@ -298,7 +298,7 @@ Upgrading should be as easy as running yarn again with the new version, but we m
 
 ## Upgrade path from v3 -> v4
 
-`startClient` option has been simpilfied. Now it will also work if you don't pass custom client with it, and in SSR (when `typeof window === 'undefined'`) it defaults to `false`.
+`startClient` option has been simplified. Now it will also work if you don't pass custom client with it. It defaults to `true`.
 
 #### Note on v4.0.0:
 The major release is driven by Node14 end of life and represents no other changes.  From this version onwards we do not guarantee that this library will work server side with Node 14.

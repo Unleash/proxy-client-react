@@ -78,8 +78,7 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
     client.current.on('error', errorCallback);
     client.current.on('recovered', clearErrorCallback);
 
-    const shouldStartClient = startClient || !unleashClient;
-    if (shouldStartClient) {
+    if (startClient) {
       // defensively stop the client first
       client.current.stop();
       // start the client

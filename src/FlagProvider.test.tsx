@@ -271,3 +271,27 @@ test('should not start client if startClient is false', () => {
   expect(localMock).not.toHaveBeenCalled();
   expect(stopMock).not.toHaveBeenCalled();
 });
+
+test('should not start client if startClient is false when passing config', () => {
+  const localMock = vi.fn();
+  const stopMock = vi.fn();
+  UnleashClientSpy.mockReturnValue({
+    getVariant: getVariantMock,
+    updateContext: updateContextMock,
+    start: localMock,
+    stop: stopMock,
+    isEnabled: isEnabledMock,
+    on: onMock,
+    off: offMock,
+  });
+
+
+  render(
+    <FlagProvider config={givenConfig} startClient={false}>
+      <div>Hi</div>
+    </FlagProvider>
+  );
+
+  expect(localMock).not.toHaveBeenCalled();
+  expect(stopMock).not.toHaveBeenCalled();
+});
