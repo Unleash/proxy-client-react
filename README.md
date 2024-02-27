@@ -145,6 +145,9 @@ Deferring the client start gives you more fine-grained control over when to star
 To start the client, use the client's `start` method. The below snippet of pseudocode will defer polling until the end of the `asyncProcess` function.
 
 ```jsx
+const client = new UnleashClient({
+  /* ... */
+});
 
 const MyAppComponent = () => {
   useEffect(() => {
