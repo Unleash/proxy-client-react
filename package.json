@@ -56,6 +56,6 @@
     "vitest": "^0.34.6"
   },
   "peerDependencies": {
-    "unleash-proxy-client": "^3.2.0"
+    "unleash-proxy-client": "^3.4.0"
   }
 }
