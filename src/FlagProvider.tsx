@@ -1,13 +1,14 @@
 /** @format */
 
-import * as React from 'react';
-import { IConfig, UnleashClient } from 'unleash-proxy-client';
-import FlagContext, { IFlagContextValue } from './FlagContext';
+import React, { type FC, type PropsWithChildren, useEffect, useMemo, useState } from 'react';
+import { type IConfig, UnleashClient } from 'unleash-proxy-client';
+import FlagContext, { type IFlagContextValue } from './FlagContext';
 
 export interface IFlagProvider {
   config?: IConfig;
   unleashClient?: UnleashClient;
   startClient?: boolean;
+  stopClient?: boolean;
 }
 
 const offlineConfig: IConfig = {
@@ -24,7 +25,7 @@ const _startTransition = 'startTransition';
 // fallback for React <18 which doesn't support startTransition
 const startTransition = React[_startTransition] || (fn => fn());
 
-const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
+const FlagProvider: FC<PropsWithChildren<IFlagProvider>> = ({
   config: customConfig,
   children,
   unleashClient,
@@ -38,13 +39,13 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
   const [flagsReady, setFlagsReady] = React.useState(
     Boolean(
       unleashClient
-        ? customConfig?.bootstrap && customConfig?.bootstrapOverride !== false
+        ? (customConfig?.bootstrap && customConfig?.bootstrapOverride !== false) || unleashClient.isReady()
         : config.bootstrap && config.bootstrapOverride !== false
     )
   );
-  const [flagsError, setFlagsError] = React.useState(null);
+  const [flagsError, setFlagsError] = useState(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!config && !unleashClient) {
       console.error(
         `You must provide either a config or an unleash client to the flag provider.
@@ -63,9 +64,9 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
       startTransition(() => {
         setFlagsError(null);
       });
-    } 
+    }
 
-    let timeout: any;
+    let timeout: ReturnType<typeof setTimeout> | null = null;
     const readyCallback = () => {
       // wait for flags to resolve after useFlag gets the same event
       timeout = setTimeout(() => {
@@ -102,28 +103,13 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
     };
   }, []);
 
-  const updateContext: IFlagContextValue['updateContext'] = async (context) => {
-    await client.current.updateContext(context);
-  };
-
-  const isEnabled: IFlagContextValue['isEnabled'] = (toggleName) => {
-    return client.current.isEnabled(toggleName);
-  };
-
-  const getVariant: IFlagContextValue['getVariant'] = (toggleName) => {
-    return client.current.getVariant(toggleName);
-  };
-
-  const on: IFlagContextValue['on'] = (event, callback, ctx) => {
-    return client.current.on(event, callback, ctx);
-  };
-
-  const context = React.useMemo<IFlagContextValue>(
+  const context = useMemo<IFlagContextValue>(
     () => ({
-      on,
-      updateContext,
-      isEnabled,
-      getVariant,
+      on: ((event, callback, ctx) => client.current.on(event, callback, ctx)) as IFlagContextValue['on'],
+      off: ((event, callback) => client.current.off(event, callback)) as IFlagContextValue['off'],
+      updateContext: async (context) => await client.current.updateContext(context),
+      isEnabled: (toggleName) => client.current.isEnabled(toggleName),
+      getVariant: (toggleName) => client.current.getVariant(toggleName),
       client: client.current,
       flagsReady,
       flagsError,
