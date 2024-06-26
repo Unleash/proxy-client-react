@@ -39,11 +39,11 @@ const FlagProvider: FC<PropsWithChildren<IFlagProvider>> = ({
   const [flagsReady, setFlagsReady] = React.useState(
     Boolean(
       unleashClient
-        ? (customConfig?.bootstrap && customConfig?.bootstrapOverride !== false) || unleashClient.isReady()
+        ? (customConfig?.bootstrap && customConfig?.bootstrapOverride !== false) || unleashClient.isReady?.()
         : config.bootstrap && config.bootstrapOverride !== false
     )
   );
-  const [flagsError, setFlagsError] = useState(null);
+  const [flagsError, setFlagsError] = useState(client?.getError?.() || null);
 
   useEffect(() => {
     if (!config && !unleashClient) {
