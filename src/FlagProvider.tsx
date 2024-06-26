@@ -56,7 +56,7 @@ const FlagProvider: FC<PropsWithChildren<IFlagProvider>> = ({
 
     const errorCallback = (e: any) => {
       startTransition(() => {
-        setFlagsError(currentError => currentError || e);
+        setFlagsError((currentError: any) => currentError || e);
       });
     };
 
