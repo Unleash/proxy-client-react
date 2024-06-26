@@ -4,7 +4,7 @@ import type { UnleashClient } from 'unleash-proxy-client';
 export interface IFlagContextValue
   extends Pick<
     UnleashClient,
-    'on' | 'updateContext' | 'isEnabled' | 'getVariant'
+    'on' | 'off' | 'updateContext' | 'isEnabled' | 'getVariant'
   > {
   client: UnleashClient;
   flagsReady: boolean;

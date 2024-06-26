@@ -29,6 +29,7 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
   children,
   unleashClient,
   startClient = true,
+  stopClient = true,
 }) => {
   const config = customConfig || offlineConfig;
   const client = React.useRef<UnleashClient>(
@@ -90,8 +91,10 @@ const FlagProvider: React.FC<React.PropsWithChildren<IFlagProvider>> = ({
       if (client.current) {
         client.current.off('error', errorCallback);
         client.current.off('ready', readyCallback);
-        client.current.off('recovered', clearErrorCallback)
-        client.current.stop();
+        client.current.off('recovered', clearErrorCallback);
+        if (stopClient) {
+          client.current.stop();
+        }
       }
       if (timeout) {
         clearTimeout(timeout);
