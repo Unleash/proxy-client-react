@@ -2,13 +2,20 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import useFlagsStatus from './useFlagsStatus';
 import FlagProvider from './FlagProvider';
-import { EVENTS, UnleashClient } from 'unleash-proxy-client';
+import { UnleashClient } from 'unleash-proxy-client';
 
 const TestComponent = () => {
   const { flagsReady } = useFlagsStatus();
 
   return <div>{flagsReady ? 'flagsReady' : 'loading'}</div>;
 };
+
+const ErrorTestComponent = () => {
+  const { flagsError } = useFlagsStatus();
+
+  return <div>{flagsError ? 'flagsError' : 'no issue'}</div>;
+};
+
 
 const mockClient = {
   on: vi.fn(),
@@ -77,4 +84,37 @@ test('should start when already initialized client is passed', async () => {
   await waitFor(() => {
     expect(screen.queryByText('flagsReady')).toBeInTheDocument();
   });
+});
+
+test('should handle client errors', async () => {
+  const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+  const client = new UnleashClient({
+    url: 'http://localhost:4242/api',
+    fetch: async () => {
+      throw new Error('test error');
+    },
+    clientKey: '123',
+    appName: 'test',
+  });
+
+  await client.start();
+
+  const ui = (
+    <FlagProvider unleashClient={client}>
+      <ErrorTestComponent />
+    </FlagProvider>
+  );
+
+  render(ui);
+
+  await waitFor(() => {
+    expect(screen.queryByText('flagsError')).toBeInTheDocument();
+  });
+
+  expect(consoleError).toHaveBeenCalledWith(
+    'Unleash: unable to fetch feature toggles',
+    expect.any(Error)
+  );
+  consoleError.mockRestore();
 });

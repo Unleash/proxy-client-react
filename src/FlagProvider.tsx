@@ -43,7 +43,7 @@ const FlagProvider: FC<PropsWithChildren<IFlagProvider>> = ({
         : config.bootstrap && config.bootstrapOverride !== false
     )
   );
-  const [flagsError, setFlagsError] = useState(client?.getError?.() || null);
+  const [flagsError, setFlagsError] = useState(client.current.getError?.() || null);
 
   useEffect(() => {
     if (!config && !unleashClient) {
