@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 21.x, 22.x]
+        node-version: [18.x, 20.x, 21.x]
     steps:
       - uses: actions/checkout@v2
 
@@ -22,7 +22,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: 📌 Install
-        run: yarn install --frozen-lockfile
+        run: yarn
 
       - name: 🔨 Build
         run: yarn build
