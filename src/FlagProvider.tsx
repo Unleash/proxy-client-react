@@ -107,7 +107,7 @@ const FlagProvider: FC<PropsWithChildren<IFlagProvider>> = ({
     () => ({
       on: ((event, callback, ctx) => client.current.on(event, callback, ctx)) as IFlagContextValue['on'],
       off: ((event, callback) => client.current.off(event, callback)) as IFlagContextValue['off'],
-      updateContext: (context) => client.current.updateContext(context),
+      updateContext: client.current.updateContext,
       isEnabled: (toggleName) => client.current.isEnabled(toggleName),
       getVariant: (toggleName) => client.current.getVariant(toggleName),
       client: client.current,
