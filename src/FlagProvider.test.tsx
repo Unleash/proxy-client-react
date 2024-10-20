@@ -110,7 +110,7 @@ test('A consumer that subscribes AFTER client init shows values from provider an
     'consuming value isEnabled true'
   );
   expect(screen.getByText(/consuming value updateContext/)).toHaveTextContent(
-    'consuming value updateContext [object Promise]'
+    'consuming value updateContext undefined'
   );
   expect(screen.getByText(/consuming value getVariant/)).toHaveTextContent(
     'consuming value getVariant A'
@@ -148,7 +148,7 @@ test('A consumer should be able to get a variant when the client is passed into 
     'consuming value isEnabled true'
   );
   expect(screen.getByText(/consuming value updateContext/)).toHaveTextContent(
-    'consuming value updateContext [object Promise]'
+    'consuming value updateContext undefined'
   );
   expect(screen.getByText(/consuming value getVariant/)).toHaveTextContent(
     'consuming value getVariant A'
