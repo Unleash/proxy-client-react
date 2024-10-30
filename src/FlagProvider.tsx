@@ -23,7 +23,11 @@ const offlineConfig: IConfig = {
 // save startTransition as var to avoid webpack analysis (https://github.com/webpack/webpack/issues/14814)
 const _startTransition = 'startTransition';
 // fallback for React <18 which doesn't support startTransition
-const startTransition = React[_startTransition] || (fn => fn());
+const isReactNative = typeof navigator !== 'undefined' && navigator?.product === 'ReactNative';
+// Fallback for React <18 and exclude startTransition if in React Native
+const startTransition: (fn: () => void) => void = !isReactNative && React[_startTransition]
+  ? React[_startTransition]
+  : (fn => fn());
 
 const FlagProvider: FC<PropsWithChildren<IFlagProvider>> = ({
   config: customConfig,
