@@ -25,9 +25,7 @@ const offlineConfig: IConfig = {
 const _startTransition = 'startTransition';
 // fallback for React <18 which doesn't support startTransition
 // Fallback for React <18 and exclude startTransition if in React Native
-const defaultStartTransition: (fn: () => void) => void = React[_startTransition]
-  ? React[_startTransition]
-  : (fn => fn());
+const defaultStartTransition = React[_startTransition] || (fn => fn());
 
 const FlagProvider: FC<PropsWithChildren<IFlagProvider>> = ({
   config: customConfig,
