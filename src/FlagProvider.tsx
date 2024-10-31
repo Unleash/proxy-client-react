@@ -9,6 +9,7 @@ export interface IFlagProvider {
   unleashClient?: UnleashClient;
   startClient?: boolean;
   stopClient?: boolean;
+  startTransition?: (fn: () => void) => void;
 }
 
 const offlineConfig: IConfig = {
@@ -23,7 +24,8 @@ const offlineConfig: IConfig = {
 // save startTransition as var to avoid webpack analysis (https://github.com/webpack/webpack/issues/14814)
 const _startTransition = 'startTransition';
 // fallback for React <18 which doesn't support startTransition
-const startTransition = React[_startTransition] || (fn => fn());
+// Fallback for React <18 and exclude startTransition if in React Native
+const defaultStartTransition = React[_startTransition] || (fn => fn());
 
 const FlagProvider: FC<PropsWithChildren<IFlagProvider>> = ({
   config: customConfig,
@@ -31,6 +33,7 @@ const FlagProvider: FC<PropsWithChildren<IFlagProvider>> = ({
   unleashClient,
   startClient = true,
   stopClient = true,
+  startTransition = defaultStartTransition
 }) => {
   const config = customConfig || offlineConfig;
   const client = React.useRef<UnleashClient>(
