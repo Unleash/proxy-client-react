@@ -282,6 +282,13 @@ const config = {
 };
 ```
 
+### startTransition
+
+If your version of React Native doesn't support `startTransition`, you can provide fallback implementation:
+```jsx
+  <FlagProvider startTransition={fn => fn()} ></FlagProvider>
+```
+
 # Migration guide
 
 ## Upgrade path from v1 -> v2
