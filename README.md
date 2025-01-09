@@ -12,6 +12,8 @@ This library uses the core [unleash-proxy-client](https://github.com/Unleash/unl
 
 ## Initialize the client
 
+*NOTE*: [unleash-proxy](https://github.com/Unleash/unleash-proxy) is in maintenance moded. It is recommend to use the [Frontend API](https://docs.getunleash.io/reference/front-end-api) or [unleash-edge](https://github.com/Unleash/unleash-edge) instead
+
 Prepare [Unleash Proxy](https://docs.getunleash.io/reference/unleash-proxy) secret
 or [Frontend API Access](https://docs.getunleash.io/reference/front-end-api) token.
 
