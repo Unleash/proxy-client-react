@@ -8,6 +8,8 @@ yarn add @unleash/proxy-client-react unleash-proxy-client
 
 # How to use
 
+This library uses the core [unleash-proxy-client](https://github.com/Unleash/unleash-proxy-client-js) JS client as a base.
+
 ## Initialize the client
 
 Prepare [Unleash Proxy](https://docs.getunleash.io/reference/unleash-proxy) secret
@@ -131,6 +133,39 @@ const MyComponent = ({ userId }) => {
     }
     run();
   }, [userId]);
+};
+```
+
+## Listening to events
+
+The core Javascript client will emit different types on events based on what is happening in
+the internals. You can listen on these events by leveraging the hook to return the client and listen
+directly to these events. Or, if you are instantiating the FlagProvider with a client, use the client directly
+to listen to events. [See the full list of events here.](https://github.com/Unleash/unleash-proxy-client-js?tab=readme-ov-file#available-events)
+
+NOTE: `FlagProvider` is leveraging these internal events to provide information through `useFlagsStatus`.
+
+```jsx
+import { useUnleashContext, useFlag } from '@unleash/proxy-client-react';
+
+const MyComponent = ({ userId }) => {
+  const client = useUnleashClient();
+
+  useEffect(() => {
+    if (client) {
+      const handleError = () => {
+        // Handle error
+      }
+
+      client.on('error', handleError)
+    }
+
+    return () => {
+      client.off('error', handleCallback)
+    }
+  }, [client])
+
+  // ...rest of component
 };
 ```
 
