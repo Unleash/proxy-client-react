@@ -145,7 +145,7 @@ the internals. You can listen on these events by leveraging the hook to return t
 directly to these events. Or, if you are instantiating the FlagProvider with a client, use the client directly
 to listen to events. [See the full list of events here.](https://github.com/Unleash/unleash-proxy-client-js?tab=readme-ov-file#available-events)
 
-NOTE: `FlagProvider` is leveraging these internal events to provide information through `useFlagsStatus`.
+NOTE: `FlagProvider` uses these internal events to provide information through `useFlagsStatus`.
 
 ```jsx
 import { useUnleashContext, useFlag } from '@unleash/proxy-client-react';
