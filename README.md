@@ -12,7 +12,7 @@ This library uses the core [unleash-proxy-client](https://github.com/Unleash/unl
 
 ## Initialize the client
 
-*NOTE*: [unleash-proxy](https://github.com/Unleash/unleash-proxy) is in maintenance moded. It is recommend to use the [Frontend API](https://docs.getunleash.io/reference/front-end-api) or [unleash-edge](https://github.com/Unleash/unleash-edge) instead
+*NOTE*: [unleash-proxy](https://github.com/Unleash/unleash-proxy) is in maintenance mode. It is recommend to use the [Frontend API](https://docs.getunleash.io/reference/front-end-api) or [unleash-edge](https://github.com/Unleash/unleash-edge) instead.
 
 Prepare [Unleash Proxy](https://docs.getunleash.io/reference/unleash-proxy) secret
 or [Frontend API Access](https://docs.getunleash.io/reference/front-end-api) token.
@@ -45,6 +45,8 @@ root.render(
 ### Connection options
 
 To connect this SDK to your Unleash instance's [front-end API](https://docs.getunleash.io/reference/front-end-api), use the URL to your Unleash instance's front-end API (`<unleash-url>/api/frontend`) as the `url` parameter. For the `clientKey` parameter, use a `FRONTEND` token generated from your Unleash instance. Refer to the [_how to create API tokens_](https://docs.getunleash.io/how-to/how-to-create-api-tokens) guide for the necessary steps.
+
+To connect this SDK to unleash-edge, follow the documentation provided in the [unleash-edge repository](https://github.com/unleash/unleash-edge).
 
 To connect this SDK to the [Unleash proxy](https://docs.getunleash.io/reference/unleash-proxy), use the proxy's URL and a [proxy client key](https://docs.getunleash.io/reference/api-tokens-and-client-keys#proxy-client-keys). The [_configuration_ section of the Unleash proxy docs](https://docs.getunleash.io/reference/unleash-proxy#configuration) contains more info on how to configure client keys for your proxy.
 
@@ -140,10 +142,7 @@ const MyComponent = ({ userId }) => {
 
 ## Listening to events
 
-The core Javascript client emits different types of events based on its
-internal activity. You can listen to these events by using the hook to return the client and listen
-directly to these events. Alternatively, if you are instantiating the FlagProvider with a client, use the client directly
-to listen to events. [See the full list of events here.](https://github.com/Unleash/unleash-proxy-client-js?tab=readme-ov-file#available-events)
+The core JavaScript client emits various types of events depending on internal activities. You can listen to these events by using a hook to access the client and then directly attaching event listeners. Alternatively, if you're using the FlagProvider with a client, you can directly use this client to listen to the events. [See the full list of events here.](https://github.com/Unleash/unleash-proxy-client-js?tab=readme-ov-file#available-events)
 
 NOTE: `FlagProvider` uses these internal events to provide information through `useFlagsStatus`.
 
@@ -163,7 +162,7 @@ const MyComponent = ({ userId }) => {
     }
 
     return () => {
-      client.off('error', handleCallback)
+      client.off('error', handleError)
     }
   }, [client])
 
