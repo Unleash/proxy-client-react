@@ -141,7 +141,7 @@ const MyComponent = ({ userId }) => {
 ## Listening to events
 
 The core Javascript client emits different types of events based on its
-the internals. You can listen on these events by leveraging the hook to return the client and listen
+internal activity. You can listen to these events by using the hook to return the client and listen
 directly to these events. Alternatively, if you are instantiating the FlagProvider with a client, use the client directly
 to listen to events. [See the full list of events here.](https://github.com/Unleash/unleash-proxy-client-js?tab=readme-ov-file#available-events)
 
