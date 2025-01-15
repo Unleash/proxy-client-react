@@ -1972,7 +1972,7 @@ universalify@^0.2.0:
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.2.0.tgz#6451760566fa857534745ab1dde952d1b1761be0"
   integrity sha512-CJ1QgKmNg3CwvAv/kOFmtnEN05f0D/cn9QntgNOQlQF9dgvVTHj3t+8JPdjqawCHk7V/KA+fbUqzZ9XWhcqPUg==
 
-unleash-proxy-client@^3.5.2:
+unleash-proxy-client@^3.7.0:
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/unleash-proxy-client/-/unleash-proxy-client-3.7.0.tgz#d9c116875c19f0ee2207973c7b9111705611f945"
   integrity sha512-SkgVnu7xz2PSwyKvM3SUJXPvtokJZvDrUGp6utYSxwHa5DFrn3FUnCnLpAUjV8tzF+GenPcsm9DAHS1drs5GyQ==
