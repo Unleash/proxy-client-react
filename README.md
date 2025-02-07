@@ -147,7 +147,7 @@ The core JavaScript client emits various types of events depending on internal a
 NOTE: `FlagProvider` uses these internal events to provide information through `useFlagsStatus`.
 
 ```jsx
-import { useUnleashContext, useFlag } from '@unleash/proxy-client-react';
+import { useUnleashClient, useFlag } from '@unleash/proxy-client-react';
 
 const MyComponent = ({ userId }) => {
   const client = useUnleashClient();
