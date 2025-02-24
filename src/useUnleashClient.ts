@@ -1,8 +1,7 @@
-import { useContext } from 'react';
-import FlagContext from './FlagContext';
+import { useFlagContext } from './useFlagContext';
 
 const useUnleashClient = () => {
-  const { client } = useContext(FlagContext);
+  const { client } = useFlagContext();
   return client;
 };
 
