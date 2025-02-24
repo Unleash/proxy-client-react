@@ -17,6 +17,6 @@ export interface IFlagContextValue
   >;
 }
 
-const FlagContext = React.createContext<IFlagContextValue>(null as never);
+const FlagContext = React.createContext<IFlagContextValue | null>(null as never);
 
 export default FlagContext;

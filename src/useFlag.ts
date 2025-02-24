@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState, useRef } from 'react';
-import FlagContext from './FlagContext';
+import { useEffect, useState, useRef } from 'react';
+import { useFlagContext } from './useFlagContext';
 
 const useFlag = (featureName: string) => {
-  const { isEnabled, client } = useContext(FlagContext);
+  const  { isEnabled, client }  = useFlagContext();
   const [flag, setFlag] = useState(!!isEnabled(featureName));
   const flagRef = useRef<typeof flag>();
   flagRef.current = flag;
