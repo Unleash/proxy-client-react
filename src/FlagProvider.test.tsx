@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { render, screen } from '@testing-library/react';
 import { type Mock } from 'vitest';
 import { UnleashClient, type IVariant, EVENTS } from 'unleash-proxy-client';
 import FlagProvider from './FlagProvider';
-import FlagContext from './FlagContext';
+import { useFlagContext } from './useFlagContext';
 import '@testing-library/jest-dom';
 
 const getVariantMock = vi.fn().mockReturnValue('A');
@@ -44,8 +44,7 @@ vi.mock('unleash-proxy-client', async (importOriginal) => {
 const noop = () => {};
 
 const FlagConsumerAfterClientInit = () => {
-  const { updateContext, isEnabled, getVariant, client, on } =
-    useContext(FlagContext);
+  const { updateContext, isEnabled, getVariant, client, on } = useFlagContext();
   const [enabled, setIsEnabled] = useState(false);
   const [variant, setVariant] = useState<IVariant | null>(null);
   const [context, setContext] = useState<any>('nothing');
@@ -71,8 +70,7 @@ const FlagConsumerAfterClientInit = () => {
 };
 
 const FlagConsumerBeforeClientInit = () => {
-  const { updateContext, isEnabled, getVariant, client, on } =
-    useContext(FlagContext);
+  const { updateContext, isEnabled, getVariant, client, on } = useFlagContext();
   const [enabled, setIsEnabled] = useState(false);
   const [variant, setVariant] = useState<IVariant | null>(null);
   const [context, setContext] = useState<any>('nothing');
@@ -162,8 +160,7 @@ test('A memoized consumer should not rerender when the context provider values a
   const renderCounter = vi.fn();
 
   const MemoizedConsumer = React.memo(() => {
-    const { updateContext, isEnabled, getVariant, client, on } =
-      useContext(FlagContext);
+    const { updateContext, isEnabled, getVariant, client, on } = useFlagContext();
 
     renderCounter();
 
