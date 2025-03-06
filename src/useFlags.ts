@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from 'react';
-import FlagContext from './FlagContext';
+import { useEffect, useState } from 'react';
+import { useFlagContext } from './useFlagContext';
 
 const useFlags = () => {
-  const { client } = useContext(FlagContext);
+  const { client } = useFlagContext();
   const [flags, setFlags] = useState(client.getAllToggles());
 
   useEffect(() => {

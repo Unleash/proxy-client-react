@@ -1,12 +1,12 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { EVENTS, UnleashClient } from 'unleash-proxy-client';
 import FlagProvider from './FlagProvider';
 import useFlagsStatus from './useFlagsStatus';
 import { act } from 'react-dom/test-utils';
 import useFlag from './useFlag';
+import { useFlagContext } from './useFlagContext';
 import useVariant from './useVariant';
-import FlagContext from './FlagContext';
 
 const fetchMock = vi.fn(async () => {
   return Promise.resolve({
@@ -89,7 +89,7 @@ test('should render toggles', async () => {
 
 test('should be ready from the start if bootstrapped', () => {
   const Component = React.memo(() => {
-    const { flagsReady } = useContext(FlagContext);
+    const { flagsReady } = useFlagContext();
 
     return <>{flagsReady ? 'ready' : ''}</>;
   });
@@ -183,7 +183,7 @@ test('should render limited times when bootstrapped', async () => {
 
   const Component = () => {
     const enabled = useFlag('test-flag');
-    const { flagsReady } = useContext(FlagContext);
+    const { flagsReady } = useFlagContext();
 
     renders += 1;
 
@@ -229,7 +229,7 @@ test('should resolve values before setting flagsReady', async () => {
 
   const Component = () => {
     const enabled = useFlag('test-flag');
-    const { flagsReady } = useContext(FlagContext);
+    const { flagsReady } = useFlagContext();
 
     renders += 1;
 

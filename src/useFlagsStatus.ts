@@ -1,10 +1,8 @@
 /** @format */
-
-import { useContext } from 'react';
-import FlagContext from './FlagContext';
+import { useFlagContext } from './useFlagContext';
 
 const useFlagsStatus = () => {
-  const { flagsReady, flagsError } = useContext(FlagContext);
+  const { flagsReady, flagsError } = useFlagContext();
 
   return { flagsReady, flagsError };
 };
