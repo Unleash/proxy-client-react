@@ -347,7 +347,7 @@ Upgrading should be as easy as running yarn again with the new version, but we m
 
 ## Upgrade path from v4 -> v5
 
-[FlagContext public interface changed](https://github.com/Unleash/proxy-client-react/commit/b783ef4016dbb881ac3d878cffaf5241b047cc35#diff-825c82ad66c3934257e0ee3e0511d9223db22e7ddf5de9cbdf6485206e3e02cfL20-R20). if you used FlagContext directly you may have to adjust your types.
+[FlagContext public interface changed](https://github.com/Unleash/proxy-client-react/commit/b783ef4016dbb881ac3d878cffaf5241b047cc35#diff-825c82ad66c3934257e0ee3e0511d9223db22e7ddf5de9cbdf6485206e3e02cfL20-R20). If you used FlagContext directly you may have to adjust your code slightly to accomodate the new type changes.
 
 
 #### Note on v4.0.0:
