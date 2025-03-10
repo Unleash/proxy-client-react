@@ -1,17 +1,24 @@
-import { renderHook } from '@testing-library/react-hooks/native';
+import { renderHook } from '@testing-library/react';
+import { vi, test, expect } from 'vitest';
 import FlagProvider from "./FlagProvider";
 import { useFlagContext } from "./useFlagContext";
 
-test("throws an error if used outside of a FlagProvider", () => {
-    const { result } = renderHook(() => useFlagContext());
+test("logs an error if used outside of a FlagProvider", () => {
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     
-    expect(result.error).toEqual(
-        Error("This hook must be used within a FlagProvider")
-    );
+    const { result } = renderHook(() => useFlagContext());
+    expect(consoleSpy).toHaveBeenCalledWith("This hook must be used within a FlagProvider");
+    expect(result.current).toBeNull();
+    
+    consoleSpy.mockRestore();
 });
 
-test("does not throw an error if used inside of a FlagProvider", () => {
-    const { result } = renderHook(() => useFlagContext(), { wrapper: FlagProvider });
+test("does not log an error if used inside of a FlagProvider", () => {
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     
-    expect(result.error).toBeUndefined();
+    const { result } = renderHook(() => useFlagContext(), { wrapper: FlagProvider });
+    expect(consoleSpy).not.toHaveBeenCalled();
+    expect(result.current).not.toBeNull();
+    
+    consoleSpy.mockRestore();
 });

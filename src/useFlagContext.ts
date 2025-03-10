@@ -4,7 +4,8 @@ import FlagContext from './FlagContext';
 export function useFlagContext() {
     const context = useContext(FlagContext);
     if (!context) {
-      throw new Error('This hook must be used within a FlagProvider');
+      console.error('This hook must be used within a FlagProvider');
+      return null;
     }
     return context;
 }
