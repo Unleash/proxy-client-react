@@ -345,6 +345,11 @@ Upgrading should be as easy as running yarn again with the new version, but we m
 
 `startClient` option has been simplified. Now it will also work if you don't pass custom client with it. It defaults to `true`.
 
+## Upgrade path from v4 -> v5
+
+[FlagContext public interface changed](https://github.com/Unleash/proxy-client-react/commit/b783ef4016dbb881ac3d878cffaf5241b047cc35#diff-825c82ad66c3934257e0ee3e0511d9223db22e7ddf5de9cbdf6485206e3e02cfL20-R20). If you used FlagContext directly you may have to adjust your code slightly to accomodate the new type changes.
+
+
 #### Note on v4.0.0:
 The major release is driven by Node14 end of life and represents no other changes.  From this version onwards we do not guarantee that this library will work server side with Node 14.
 
