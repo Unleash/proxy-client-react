@@ -7,7 +7,7 @@ test("logs an error if used outside of a FlagProvider", () => {
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     
     renderHook(() => useFlagContext());
-    expect(consoleSpy).toHaveBeenCalledWith("useFlagContext hook must be used within a FlagProvider");
+    expect(consoleSpy).toHaveBeenCalledWith("useFlagContext() must be used within a FlagProvider");
     
     consoleSpy.mockRestore();
 });
