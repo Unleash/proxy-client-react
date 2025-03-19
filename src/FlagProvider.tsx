@@ -1,7 +1,7 @@
 /** @format */
 
-import React, { type FC, type PropsWithChildren, useEffect, useMemo, useState } from 'react';
-import { type IConfig, UnleashClient } from 'unleash-proxy-client';
+import React, { type FC, type PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react';
+import { type IConfig, IMutableContext, UnleashClient } from 'unleash-proxy-client';
 import FlagContext, { type IFlagContextValue } from './FlagContext';
 
 export interface IFlagProvider {
@@ -106,20 +106,47 @@ const FlagProvider: FC<PropsWithChildren<IFlagProvider>> = ({
     };
   }, []);
 
+  const on = useCallback(
+    (event: string, callback: Function, ctx?: any) =>
+      client.current.on(event, callback, ctx),
+    []
+  ) as IFlagContextValue['on'];
+
+  const off = useCallback(
+    (event: string, callback?: Function) => client.current.off(event, callback),
+    []
+  ) as IFlagContextValue['off'];
+
+  const isEnabled = useCallback(
+    (toggleName: string) => client.current.isEnabled(toggleName),
+    []
+  ) as IFlagContextValue['isEnabled'];
+
+  const updateContext = useCallback(
+    async (context: IMutableContext) =>
+      await client.current.updateContext(context),
+    []
+  ) as IFlagContextValue['updateContext'];
+
+  const getVariant = useCallback(
+    (toggleName: string) => client.current.getVariant(toggleName),
+    []
+  ) as IFlagContextValue['getVariant'];
+
   const context = useMemo<IFlagContextValue>(
     () => ({
-      on: ((event, callback, ctx) => client.current.on(event, callback, ctx)) as IFlagContextValue['on'],
-      off: ((event, callback) => client.current.off(event, callback)) as IFlagContextValue['off'],
-      updateContext: async (context) => await client.current.updateContext(context),
-      isEnabled: (toggleName) => client.current.isEnabled(toggleName),
-      getVariant: (toggleName) => client.current.getVariant(toggleName),
+      on,
+      off,
+      updateContext,
+      isEnabled,
+      getVariant,
       client: client.current,
       flagsReady,
       flagsError,
       setFlagsReady,
       setFlagsError,
     }),
-    [flagsReady, flagsError]
+    [flagsReady, flagsError, on, off, updateContext, isEnabled, getVariant]
   );
 
   return (
