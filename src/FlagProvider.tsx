@@ -106,32 +106,25 @@ const FlagProvider: FC<PropsWithChildren<IFlagProvider>> = ({
     };
   }, []);
 
-  const on = useCallback(
-    (event: string, callback: Function, ctx?: any) =>
-      client.current.on(event, callback, ctx),
-    []
-  ) as IFlagContextValue['on'];
+  const on = useCallback<IFlagContextValue['on']>(client.current.on, []);
 
-  const off = useCallback(
-    (event: string, callback?: Function) => client.current.off(event, callback),
-    []
-  ) as IFlagContextValue['off'];
+  const off = useCallback<IFlagContextValue['off']>(client.current.off, []);
 
-  const isEnabled = useCallback(
+  const isEnabled = useCallback<IFlagContextValue['isEnabled']>(
     (toggleName: string) => client.current.isEnabled(toggleName),
     []
-  ) as IFlagContextValue['isEnabled'];
+  )
 
-  const updateContext = useCallback(
+  const updateContext = useCallback<IFlagContextValue['updateContext']>(
     async (context: IMutableContext) =>
       await client.current.updateContext(context),
     []
-  ) as IFlagContextValue['updateContext'];
+  )
 
-  const getVariant = useCallback(
+  const getVariant = useCallback<IFlagContextValue['getVariant']>(
     (toggleName: string) => client.current.getVariant(toggleName),
     []
-  ) as IFlagContextValue['getVariant'];
+  )
 
   const context = useMemo<IFlagContextValue>(
     () => ({
