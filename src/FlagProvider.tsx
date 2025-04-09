@@ -1,7 +1,7 @@
 /** @format */
 
-import React, { type FC, type PropsWithChildren, useEffect, useMemo, useState } from 'react';
-import { type IConfig, UnleashClient } from 'unleash-proxy-client';
+import React, { type FC, type PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react';
+import { type IConfig, IMutableContext, UnleashClient } from 'unleash-proxy-client';
 import FlagContext, { type IFlagContextValue } from './FlagContext';
 
 export interface IFlagProvider {
@@ -106,20 +106,40 @@ const FlagProvider: FC<PropsWithChildren<IFlagProvider>> = ({
     };
   }, []);
 
+  const on = useCallback<IFlagContextValue['on']>(client.current.on, []);
+
+  const off = useCallback<IFlagContextValue['off']>(client.current.off, []);
+
+  const isEnabled = useCallback<IFlagContextValue['isEnabled']>(
+    (toggleName: string) => client.current.isEnabled(toggleName),
+    []
+  )
+
+  const updateContext = useCallback<IFlagContextValue['updateContext']>(
+    async (context: IMutableContext) =>
+      await client.current.updateContext(context),
+    []
+  )
+
+  const getVariant = useCallback<IFlagContextValue['getVariant']>(
+    (toggleName: string) => client.current.getVariant(toggleName),
+    []
+  )
+
   const context = useMemo<IFlagContextValue>(
     () => ({
-      on: ((event, callback, ctx) => client.current.on(event, callback, ctx)) as IFlagContextValue['on'],
-      off: ((event, callback) => client.current.off(event, callback)) as IFlagContextValue['off'],
-      updateContext: async (context) => await client.current.updateContext(context),
-      isEnabled: (toggleName) => client.current.isEnabled(toggleName),
-      getVariant: (toggleName) => client.current.getVariant(toggleName),
+      on,
+      off,
+      updateContext,
+      isEnabled,
+      getVariant,
       client: client.current,
       flagsReady,
       flagsError,
       setFlagsReady,
       setFlagsError,
     }),
-    [flagsReady, flagsError]
+    [flagsReady, flagsError, on, off, updateContext, isEnabled, getVariant]
   );
 
   return (
