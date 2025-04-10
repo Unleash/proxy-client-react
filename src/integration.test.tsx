@@ -1,12 +1,14 @@
-import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import React, { type FC } from 'react';
+import { act, getByTestId, render, screen, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom'
 import { EVENTS, UnleashClient } from 'unleash-proxy-client';
 import FlagProvider from './FlagProvider';
 import useFlagsStatus from './useFlagsStatus';
-import { act } from 'react-dom/test-utils';
 import useFlag from './useFlag';
 import { useFlagContext } from './useFlagContext';
 import useVariant from './useVariant';
+import useUnleashContext from './useUnleashContext';
+import userEvent from '@testing-library/user-event'
 
 const fetchMock = vi.fn(async () => {
   return Promise.resolve({
@@ -29,6 +31,10 @@ const fetchMock = vi.fn(async () => {
       });
     },
   });
+});
+
+beforeEach(() => {
+  vi.clearAllMocks();
 });
 
 test('should render toggles', async () => {
@@ -78,21 +84,20 @@ test('should render toggles', async () => {
   );
 
   // After client initialization
-  expect(fetchMock).toHaveBeenCalled();
-  rerender(ui);
   expect(screen.getByTestId('ready')).toHaveTextContent('true');
   expect(screen.getByTestId('state')).toHaveTextContent('true');
   expect(screen.getByTestId('variant')).toHaveTextContent(
     '{"name":"A","payload":{"type":"string","value":"A"},"enabled":true,"feature_enabled":true}'
   );
+  expect(fetchMock).toHaveBeenCalledOnce();
 });
 
 test('should be ready from the start if bootstrapped', () => {
-  const Component = React.memo(() => {
-    const { flagsReady } = useFlagContext();
+  const Component: FC = () => {
+    const { flagsReady } = useFlagsStatus();
 
     return <>{flagsReady ? 'ready' : ''}</>;
-  });
+  }
 
   render(
     <FlagProvider
@@ -183,7 +188,7 @@ test('should render limited times when bootstrapped', async () => {
 
   const Component = () => {
     const enabled = useFlag('test-flag');
-    const { flagsReady } = useFlagContext();
+    const { flagsReady } = useFlagsStatus();
 
     renders += 1;
 
@@ -229,7 +234,7 @@ test('should resolve values before setting flagsReady', async () => {
 
   const Component = () => {
     const enabled = useFlag('test-flag');
-    const { flagsReady } = useFlagContext();
+    const { flagsReady } = useFlagsStatus();
 
     renders += 1;
 
@@ -261,4 +266,97 @@ test('should resolve values before setting flagsReady', async () => {
     expect(screen.queryByText('enabled')).toBeInTheDocument();
     expect(renders).toBe(3);
   });
+});
+
+test('should only re-render if flag changed, and not on status or context change', async () => {
+  const client = new UnleashClient({
+    url: 'http://localhost:4242/api/frontend',
+    appName: 'test',
+    clientKey: 'test',
+    fetch: fetchMock,
+  });
+  let renders = 0;
+  let sessionId = 0;
+
+  const FlagTestComponent: FC = () => {
+    const flag = useFlag('another-flag');
+    renders += 1;
+
+    return (
+        <div data-testid="flag">{flag.toString()}</div>
+    );
+  };
+
+  const FlagContextComponent: FC = () => {
+    const updateContext = useUnleashContext();
+
+    return (
+      <button type='button' onClick={() => updateContext({
+        sessionId: `${sessionId++}`,
+      })}>
+        update context
+      </button>
+    );
+  };
+
+  const ui = (
+    <FlagProvider unleashClient={client}>
+      <FlagTestComponent />
+      <FlagContextComponent />
+    </FlagProvider>
+  );
+
+  const { debug } = render(ui);
+
+  // Before client initialization
+  expect(fetchMock).not.toHaveBeenCalled();
+  expect(screen.getByTestId('flag')).toHaveTextContent('false');
+  expect(renders).toBe(1);
+
+  // Wait for client initialization
+  await act(
+    () =>
+      new Promise((resolve) => {
+        client.on(EVENTS.READY, () => {
+          setTimeout(resolve, 1);
+        });
+      })
+  );
+
+  expect(screen.getByTestId('flag')).toHaveTextContent('false');
+
+  fetchMock.mockImplementationOnce(async () => {
+    return Promise.resolve({
+      ok: true,
+      status: 200,
+      headers: new Headers({}),
+      json: () => {
+        return Promise.resolve({
+          toggles: [
+            {
+              name: 'another-flag',
+              enabled: true,
+              variant: {
+                name: 'A',
+                payload: { type: 'string', value: 'A' },
+                enabled: true,
+              },
+            },
+          ],
+        });
+      },
+    });
+  });
+
+  // Simulate flag updates
+  await act(() => client.updateToggles());
+  expect(screen.getByTestId('flag')).toHaveTextContent('true');
+  await userEvent.click(screen.getByRole('button', { name: 'update context' }));
+  await act(() => client.updateToggles());
+  expect(screen.getByTestId('flag')).toHaveTextContent('false');
+  await act(() => client.updateToggles());
+  expect(screen.getByTestId('flag')).toHaveTextContent('false');
+
+  expect(fetchMock).toHaveBeenCalledTimes(5);
+  expect(renders).toBe(3);
 });

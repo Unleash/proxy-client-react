@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type startTransition } from 'react';
 import type { UnleashClient } from 'unleash-proxy-client';
 
 export interface IFlagContextValue
@@ -7,14 +7,8 @@ export interface IFlagContextValue
     'on' | 'off' | 'updateContext' | 'isEnabled' | 'getVariant'
   > {
   client: UnleashClient;
-  flagsReady: boolean;
-  setFlagsReady: React.Dispatch<
-    React.SetStateAction<IFlagContextValue['flagsReady']>
-  >;
-  flagsError: any;
-  setFlagsError: React.Dispatch<
-    React.SetStateAction<IFlagContextValue['flagsError']>
-  >;
+  isInitiallyReady: boolean;
+  startTransition: typeof startTransition;
 }
 
 const FlagContext = React.createContext<IFlagContextValue | null>(null);

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { startTransition, useContext } from "react";
 import FlagContext, { type IFlagContextValue } from "./FlagContext";
 import type { UnleashClient } from "unleash-proxy-client";
 
@@ -41,14 +41,8 @@ const mockUnleashClient = {
 const defaultContextValue: IFlagContextValue = {
 	...methods,
 	client: mockUnleashClient,
-	flagsReady: false,
-	setFlagsReady: () => {
-		console.error("setFlagsReady() must be used within a FlagProvider");
-	},
-	flagsError: null,
-	setFlagsError: () => {
-		console.error("setFlagsError() must be used within a FlagProvider");
-	}
+	isInitiallyReady: false,
+	startTransition,
 };
 
 export function useFlagContext() {
@@ -57,5 +51,6 @@ export function useFlagContext() {
 		console.error("useFlagContext() must be used within a FlagProvider");
 		return defaultContextValue;
 	}
+
 	return context;
 }
