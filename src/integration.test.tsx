@@ -1,12 +1,14 @@
 import React, { type FC } from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, getByTestId, render, screen, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom'
 import { EVENTS, UnleashClient } from 'unleash-proxy-client';
 import FlagProvider from './FlagProvider';
 import useFlagsStatus from './useFlagsStatus';
-import { act } from 'react-dom/test-utils';
 import useFlag from './useFlag';
 import { useFlagContext } from './useFlagContext';
 import useVariant from './useVariant';
+import useUnleashContext from './useUnleashContext';
+import userEvent from '@testing-library/user-event'
 
 const fetchMock = vi.fn(async () => {
   return Promise.resolve({
@@ -92,7 +94,7 @@ test('should render toggles', async () => {
 
 test('should be ready from the start if bootstrapped', () => {
   const Component: FC = () => {
-    const { flagsReady } = useFlagContext();
+    const { flagsReady } = useFlagsStatus();
 
     return <>{flagsReady ? 'ready' : ''}</>;
   }
@@ -186,7 +188,7 @@ test('should render limited times when bootstrapped', async () => {
 
   const Component = () => {
     const enabled = useFlag('test-flag');
-    const { flagsReady } = useFlagContext();
+    const { flagsReady } = useFlagsStatus();
 
     renders += 1;
 
@@ -232,7 +234,7 @@ test('should resolve values before setting flagsReady', async () => {
 
   const Component = () => {
     const enabled = useFlag('test-flag');
-    const { flagsReady } = useFlagContext();
+    const { flagsReady } = useFlagsStatus();
 
     renders += 1;
 
@@ -274,6 +276,7 @@ test('should only re-render if flag changed, and not on status or context change
     fetch: fetchMock,
   });
   let renders = 0;
+  let sessionId = 0;
 
   const FlagTestComponent: FC = () => {
     const flag = useFlag('another-flag');
@@ -284,13 +287,26 @@ test('should only re-render if flag changed, and not on status or context change
     );
   };
 
+  const FlagContextComponent: FC = () => {
+    const updateContext = useUnleashContext();
+
+    return (
+      <button type='button' onClick={() => updateContext({
+        sessionId: `${sessionId++}`,
+      })}>
+        update context
+      </button>
+    );
+  };
+
   const ui = (
     <FlagProvider unleashClient={client}>
       <FlagTestComponent />
+      <FlagContextComponent />
     </FlagProvider>
   );
 
-  render(ui);
+  const { debug } = render(ui);
 
   // Before client initialization
   expect(fetchMock).not.toHaveBeenCalled();
@@ -332,13 +348,15 @@ test('should only re-render if flag changed, and not on status or context change
     });
   });
 
-  // Simulate flag update
+  // Simulate flag updates
   await act(() => client.updateToggles());
   expect(screen.getByTestId('flag')).toHaveTextContent('true');
-
+  await userEvent.click(screen.getByRole('button', { name: 'update context' }));
+  await act(() => client.updateToggles());
+  expect(screen.getByTestId('flag')).toHaveTextContent('false');
   await act(() => client.updateToggles());
   expect(screen.getByTestId('flag')).toHaveTextContent('false');
 
-  expect(fetchMock).toHaveBeenCalledTimes(3);
+  expect(fetchMock).toHaveBeenCalledTimes(5);
   expect(renders).toBe(3);
 });
