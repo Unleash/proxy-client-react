@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { type FC, type PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { type FC, type PropsWithChildren, useEffect, useMemo, useState } from 'react';
 import { type IConfig, IMutableContext, UnleashClient } from 'unleash-proxy-client';
 import FlagContext, { type IFlagContextValue } from './FlagContext';
 
@@ -106,40 +106,21 @@ const FlagProvider: FC<PropsWithChildren<IFlagProvider>> = ({
     };
   }, []);
 
-  const on = useCallback<IFlagContextValue['on']>(client.current.on, []);
-
-  const off = useCallback<IFlagContextValue['off']>(client.current.off, []);
-
-  const isEnabled = useCallback<IFlagContextValue['isEnabled']>(
-    (toggleName: string) => client.current.isEnabled(toggleName),
-    []
-  )
-
-  const updateContext = useCallback<IFlagContextValue['updateContext']>(
-    async (context: IMutableContext) =>
-      await client.current.updateContext(context),
-    []
-  )
-
-  const getVariant = useCallback<IFlagContextValue['getVariant']>(
-    (toggleName: string) => client.current.getVariant(toggleName),
-    []
-  )
-
   const context = useMemo<IFlagContextValue>(
     () => ({
-      on,
-      off,
-      updateContext,
-      isEnabled,
-      getVariant,
+      on: (...args) => client.current.on(...args),
+      off: (...args) => client.current.off(...args),
+      isEnabled: (...args) => client.current.isEnabled(...args),
+      updateContext: async (...args) =>
+        await client.current.updateContext(...args),
+      getVariant: (...args) => client.current.getVariant(...args),
       client: client.current,
       flagsReady,
       flagsError,
       setFlagsReady,
       setFlagsError,
     }),
-    [flagsReady, flagsError, on, off, updateContext, isEnabled, getVariant]
+    [flagsReady, flagsError]
   );
 
   return (
