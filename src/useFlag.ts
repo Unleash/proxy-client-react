@@ -31,7 +31,7 @@ const useFlag = (featureName: string) => {
       client.off('update', updateHandler);
       client.off('ready', readyHandler);
     };
-  }, [client]);
+  }, [client]); // TODO: test component renders with dynamic flag name
 
   return flag;
 };

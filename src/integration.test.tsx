@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type FC } from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { EVENTS, UnleashClient } from 'unleash-proxy-client';
 import FlagProvider from './FlagProvider';
@@ -29,6 +29,10 @@ const fetchMock = vi.fn(async () => {
       });
     },
   });
+});
+
+beforeEach(() => {
+  vi.clearAllMocks();
 });
 
 test('should render toggles', async () => {
@@ -78,21 +82,20 @@ test('should render toggles', async () => {
   );
 
   // After client initialization
-  expect(fetchMock).toHaveBeenCalled();
-  rerender(ui);
   expect(screen.getByTestId('ready')).toHaveTextContent('true');
   expect(screen.getByTestId('state')).toHaveTextContent('true');
   expect(screen.getByTestId('variant')).toHaveTextContent(
     '{"name":"A","payload":{"type":"string","value":"A"},"enabled":true,"feature_enabled":true}'
   );
+  expect(fetchMock).toHaveBeenCalledOnce();
 });
 
 test('should be ready from the start if bootstrapped', () => {
-  const Component = React.memo(() => {
+  const Component: FC = () => {
     const { flagsReady } = useFlagContext();
 
     return <>{flagsReady ? 'ready' : ''}</>;
-  });
+  }
 
   render(
     <FlagProvider
@@ -261,4 +264,81 @@ test('should resolve values before setting flagsReady', async () => {
     expect(screen.queryByText('enabled')).toBeInTheDocument();
     expect(renders).toBe(3);
   });
+});
+
+test('should only re-render if flag changed, and not on status or context change', async () => {
+  const client = new UnleashClient({
+    url: 'http://localhost:4242/api/frontend',
+    appName: 'test',
+    clientKey: 'test',
+    fetch: fetchMock,
+  });
+  let renders = 0;
+
+  const FlagTestComponent: FC = () => {
+    const flag = useFlag('another-flag');
+    renders += 1;
+
+    return (
+        <div data-testid="flag">{flag.toString()}</div>
+    );
+  };
+
+  const ui = (
+    <FlagProvider unleashClient={client}>
+      <FlagTestComponent />
+    </FlagProvider>
+  );
+
+  render(ui);
+
+  // Before client initialization
+  expect(fetchMock).not.toHaveBeenCalled();
+  expect(screen.getByTestId('flag')).toHaveTextContent('false');
+  expect(renders).toBe(1);
+
+  // Wait for client initialization
+  await act(
+    () =>
+      new Promise((resolve) => {
+        client.on(EVENTS.READY, () => {
+          setTimeout(resolve, 1);
+        });
+      })
+  );
+
+  expect(screen.getByTestId('flag')).toHaveTextContent('false');
+
+  fetchMock.mockImplementationOnce(async () => {
+    return Promise.resolve({
+      ok: true,
+      status: 200,
+      headers: new Headers({}),
+      json: () => {
+        return Promise.resolve({
+          toggles: [
+            {
+              name: 'another-flag',
+              enabled: true,
+              variant: {
+                name: 'A',
+                payload: { type: 'string', value: 'A' },
+                enabled: true,
+              },
+            },
+          ],
+        });
+      },
+    });
+  });
+
+  // Simulate flag update
+  await act(() => client.updateToggles());
+  expect(screen.getByTestId('flag')).toHaveTextContent('true');
+
+  await act(() => client.updateToggles());
+  expect(screen.getByTestId('flag')).toHaveTextContent('false');
+
+  expect(fetchMock).toHaveBeenCalledTimes(3);
+  expect(renders).toBe(3);
 });
